@@ -2,11 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct Edge
+{
+    public Vector3 u;
+    public Vector3 v;
+    public Vector3 axis;
+    
+    public Edge(Vector3 u, Vector3 v)
+    {
+            this.u = u;
+            this.v = v;
+            this.axis = new Vector3(v.x - u.x, v.y - u.y, v.z - u.z);
+    }
+}
+
 public class PentaPrism : MonoBehaviour
 {
-    Vector3[] newVertices;
-    Vector2[] newUV;
-    int[] newTriangles;
+    public Edge[] edges = new Edge[5];
 
     void Start()
     {
@@ -20,20 +32,20 @@ public class PentaPrism : MonoBehaviour
         float s1 = Mathf.Sin(2*pi/5);
         float s2 = Mathf.Sin(4*pi/5);
         //depth of the prism
-        float d = 1;
+        float d = -0.5f;
         //front face
-        Vector3 p0 = new Vector3(0,0,0);
-        Vector3 p1 = new Vector3(0,1,0);
-        Vector3 p2 = new Vector3(s1,c1,0);
-        Vector3 p3 = new Vector3(s2,-c2,0);
-        Vector3 p4 = new Vector3(-s2,-c2,0);
-        Vector3 p5 = new Vector3(-s1,c1,0);
+        Vector3 p0 = new Vector3(0,0,d);
+        Vector3 p1 = new Vector3(0,1,d);
+        Vector3 p2 = new Vector3(s1,c1,d);
+        Vector3 p3 = new Vector3(s2,-c2,d);
+        Vector3 p4 = new Vector3(-s2,-c2,d);
+        Vector3 p5 = new Vector3(-s1,c1,d);
         //back face
-        Vector3 p6 = new Vector3(0,1,d);
-        Vector3 p7 = new Vector3(s1,c1,d);
-        Vector3 p8 = new Vector3(s2,-c2,d);
-        Vector3 p9 = new Vector3(-s2,-c2,d);
-        Vector3 p10 = new Vector3(-s1,c1,d);
+        Vector3 p6 = new Vector3(0,1,0);
+        Vector3 p7 = new Vector3(s1,c1,0);
+        Vector3 p8 = new Vector3(s2,-c2,0);
+        Vector3 p9 = new Vector3(-s2,-c2,0);
+        Vector3 p10 = new Vector3(-s1,c1,0);
 
         mesh.Clear();
         mesh.vertices = new Vector3[]{p0,p1,p2,p3,p4,p5,
@@ -63,6 +75,16 @@ public class PentaPrism : MonoBehaviour
         };
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
-        ;
+
+        //fill edges
+        for(int i = 6; i < 10; i++){
+            edges[i - 6] = new Edge(mesh.vertices[i], mesh.vertices[i + 1]);
+        }
+        edges[4] = new Edge(mesh.vertices[10], mesh.vertices[6]);
+        
+        //for(int i = 1; i < 5; i++){
+        //edges[i - 1] = new Edge(mesh.vertices[i], mesh.vertices[i + 1]);
+        //}
+        //edges[4] = new Edge(mesh.vertices[5], mesh.vertices[1]);
     }
 }

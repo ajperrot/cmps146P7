@@ -53,20 +53,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Dodecahedron.cs" />
      <Compile Include="Assets\Scripts\HexPrism.cs" />
      <Compile Include="Assets\Scripts\PentaPrism.cs" />
      <Compile Include="Assets\Scripts\StreetViewCamera.cs" />
  <Reference Include="UnityEditor.StandardEvents">
- <HintPath>/Users/Suoly/Documents/Games/SHAPE/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+ <HintPath>/Users/Suoly/Programming/cmpm146/P7/SHAPE/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
  </Reference>
  <Reference Include="Unity.TextMeshPro.Editor">
- <HintPath>/Users/Suoly/Documents/Games/SHAPE/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+ <HintPath>/Users/Suoly/Programming/cmpm146/P7/SHAPE/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.PackageManagerUI.Editor">
- <HintPath>/Users/Suoly/Documents/Games/SHAPE/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+ <HintPath>/Users/Suoly/Programming/cmpm146/P7/SHAPE/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.TextMeshPro">
- <HintPath>/Users/Suoly/Documents/Games/SHAPE/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+ <HintPath>/Users/Suoly/Programming/cmpm146/P7/SHAPE/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.AIModule">
  <HintPath>/Applications/Unity/Unity.app/Contents/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
