@@ -6,6 +6,17 @@ public class HexPrism : MonoBehaviour
 {
     public Edge[] edges = new Edge[6];
 
+    private bool destroyed = false;
+
+    void OnTriggerEnter(Collider other)
+    {
+        if(destroyed == false){
+            HexPrism script = other.gameObject.GetComponent<HexPrism>();
+            script.destroyed = true;
+            Destroy(gameObject);
+        }
+    }
+
     void Start()
     {
         Mesh mesh = new Mesh();
