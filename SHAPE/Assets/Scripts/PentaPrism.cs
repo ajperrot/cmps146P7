@@ -81,10 +81,5 @@ public class PentaPrism : MonoBehaviour
             edges[i - 6] = new Edge(mesh.vertices[i], mesh.vertices[i + 1]);
         }
         edges[4] = new Edge(mesh.vertices[10], mesh.vertices[6]);
-        
-        //for(int i = 1; i < 5; i++){
-        //edges[i - 1] = new Edge(mesh.vertices[i], mesh.vertices[i + 1]);
-        //}
-        //edges[4] = new Edge(mesh.vertices[5], mesh.vertices[1]);
     }
 }

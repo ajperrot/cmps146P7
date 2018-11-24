@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class HexPrism : MonoBehaviour
 {
-    Vector3[] newVertices;
-    Vector2[] newUV;
-    int[] newTriangles;
+    public Edge[] edges = new Edge[6];
 
     void Start()
     {
@@ -65,6 +63,11 @@ public class HexPrism : MonoBehaviour
         };
 		mesh.RecalculateNormals();
         mesh.RecalculateBounds();
-        ;
+        
+        for (int i = 6; i < 11; i++)
+        {
+            edges[i - 6] = new Edge(mesh.vertices[i], mesh.vertices[i + 1]);
+        }
+        edges[5] = new Edge(mesh.vertices[11], mesh.vertices[6]);
     }
 }

@@ -39,9 +39,9 @@ public class Polyhedron : MonoBehaviour {
 		pentagons[6] = Object.Instantiate(pentagons[0], pentagons[0].transform.position*-1f, pentagons[0].transform.rotation);
 		pentagons[6].transform.Rotate(new Vector3(180,0,0));
 		for(int i = 1; i < 6; i++){
-			pentagons[i+5] = Object.Instantiate(pentagons[6], pentagons[6].transform.position, pentagons[6].transform.rotation);
-			pentagons[i+5].transform.RotateAround(Vector3.zero, edges[i-1].axis, 180 + 116.5f);
-			pentagons[i+5].transform.Rotate(new Vector3(0,0,180));
+			pentagons[i] = Object.Instantiate(pentagons[6], pentagons[6].transform.position, pentagons[6].transform.rotation);
+			pentagons[i].transform.RotateAround(Vector3.zero, edges[i-1].axis, 180 + 116.5f);
+			pentagons[i].transform.Rotate(new Vector3(0,0,180));
    for(int j = 0; j < size - 1; j++){
 				hexagons[j] = Object.Instantiate(hexagon, pentagons[6].transform.position, pentagons[6].transform.rotation);
 				hexagons[j].transform.RotateAround(Vector3.zero, edges[i-1].axis, 270 + (116.5f/2)*(j+1));
