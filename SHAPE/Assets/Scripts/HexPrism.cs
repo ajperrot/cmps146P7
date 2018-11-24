@@ -17,22 +17,22 @@ public class HexPrism : MonoBehaviour
         float xd = Mathf.Sqrt(3)/2f;
         float yd = (1f/2f);
         //depth of prism
-        float d = 1;
+        float d = -0.5f;
         //front face
-        Vector3 p0 = new Vector3(0,0,0);
-        Vector3 p1 = new Vector3(0,1,0);
-        Vector3 p2 = new Vector3(xd,yd,0);
-        Vector3 p3 = new Vector3(xd,-yd,0);
-        Vector3 p4 = new Vector3(0,-1,0);
-        Vector3 p5 = new Vector3(-xd,-yd,0);
-		Vector3 p6 = new Vector3(-xd,yd,0);
+        Vector3 p0 = new Vector3(0,0,d);
+        Vector3 p1 = new Vector3(0,1,d);
+        Vector3 p2 = new Vector3(xd,yd,d);
+        Vector3 p3 = new Vector3(xd,-yd,d);
+        Vector3 p4 = new Vector3(0,-1,d);
+        Vector3 p5 = new Vector3(-xd,-yd,d);
+		Vector3 p6 = new Vector3(-xd,yd,d);
 		//back face
-        Vector3 p7 = new Vector3(0,1,d);
-        Vector3 p8 = new Vector3(xd,yd,d);
-        Vector3 p9 = new Vector3(xd,-yd,d);
-        Vector3 p10 = new Vector3(0,-1,d);
-        Vector3 p11 = new Vector3(-xd,-yd,d);
-		Vector3 p12 = new Vector3(-xd,yd,d);
+        Vector3 p7 = new Vector3(0,1,0);
+        Vector3 p8 = new Vector3(xd,yd,0);
+        Vector3 p9 = new Vector3(xd,-yd,0);
+        Vector3 p10 = new Vector3(0,-1,0);
+        Vector3 p11 = new Vector3(-xd,-yd,0);
+		Vector3 p12 = new Vector3(-xd,yd,0);
 
         mesh.vertices = new Vector3[]{p0,p1,p2,p3,p4,p5,p6,
 								         p7,p8,p9,p10,p11,p12};
