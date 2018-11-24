@@ -7,47 +7,77 @@ public class Polyhedron : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		//size: 1 = dodecahedron, +1 per hexagon between pentagons
-		int size = 2;
+		int size = 3;
 		int T = size * size;
 	 int facecount = 10 * T + 2;
 	 int hexcount = facecount - 12;
-		float radius = (size + 1) * 0.5f * Mathf.Sqrt((5/2) + (11/10) * Mathf.Sqrt(5));
+		float radius = (size*1.2f) * 0.5f * Mathf.Sqrt((5/2) + (11/10) * Mathf.Sqrt(5));
 	 GameObject[] pentagons = new GameObject[12];
-  GameObject[] hexagons = new GameObject[hexcount];
+  GameObject[] hexagons = new GameObject[hexcount*2];
 		GameObject pentagon = GameObject.Find("pentagon");
 		GameObject hexagon = GameObject.Find("hexagon");
-		Edge[] edges = pentagon.GetComponent<PentaPrism>().edges;
+		Edge[] pentEdges = pentagon.GetComponent<PentaPrism>().edges;
 
-		pentagons[0] = Object.Instantiate(pentagon, gameObject.transform.position, gameObject.transform.rotation);
+  hexagon.transform.Translate(Vector3.forward*radius);
+		hexagon.transform.Rotate(new Vector3(0,180,0));
+
+  //base front pentagon
+  pentagons[0] = Object.Instantiate(pentagon, gameObject.transform.position, gameObject.transform.rotation);
 		pentagons[0].transform.Translate(Vector3.forward*radius);
 		pentagons[0].transform.Rotate(new Vector3(0,180,0));
-		hexagon.transform.Translate(Vector3.forward*radius);
-		hexagon.transform.Rotate(new Vector3(0,180,0));
-		Destroy(pentagon);
+  Destroy(pentagon);
+  //initialize reletive hexagon positions
+  for(int i = 0; i < 5; i++){
+   for(int j = 1; j < size; j++){
+    int h = i*(size - 1) + (j - 1);
+    hexagons[h] = Object.Instantiate(hexagon, pentagons[0].transform.position, pentagons[0].transform.rotation);
+    hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i].axis, 270 + (116.5f/size)*j);
+    hexagons[h].transform.Rotate(new Vector3(0, 0, 90 + (i - 2) * 252));
+   }
+  }
 		//initialize front half
-		for(int i = 1; i < 6; i++){
-			pentagons[i] = Object.Instantiate(pentagons[0], pentagons[0].transform.position, pentagons[0].transform.rotation);
-			pentagons[i].transform.RotateAround(Vector3.zero, edges[i-1].axis, 180 + 116.5f);
-			pentagons[i].transform.Rotate(new Vector3(0,0,180));
-			for(int j = 0; j < size - 1; j++){
-				hexagons[j] = Object.Instantiate(hexagon, pentagons[0].transform.position, pentagons[0].transform.rotation);
-				hexagons[j].transform.RotateAround(Vector3.zero, edges[i-1].axis, 270 + (116.5f/2)*(j+1));
-				hexagons[j].transform.Rotate(new Vector3(0, 0, 90 + (i - 3) * 252));
-			}
-		}
-		//repeat for other side
-		pentagons[6] = Object.Instantiate(pentagons[0], pentagons[0].transform.position*-1f, pentagons[0].transform.rotation);
+  for(int i = 1; i < 6; i++){
+   pentagons[i] = Object.Instantiate(pentagons[0], pentagons[0].transform.position, pentagons[0].transform.rotation);
+   pentagons[i].transform.RotateAround(Vector3.zero, pentEdges[i-1].axis, 180 + 116.5f);
+   pentagons[i].transform.Rotate(new Vector3(0, 0, 180));
+    for(int j = 0; j < 5; j++){
+     for(int k = 1; k < size; k++){
+      int h = i*5*(size-1) + (k-1);
+      int baseHex = j*(size - 1) + (k-1);
+      hexagons[h] = Object.Instantiate(hexagon, hexagons[baseHex].transform.position, hexagons[baseHex].transform.rotation);
+      hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i-1].axis, 180 + 116.5f);
+      hexagons[h].transform.RotateAround(pentagons[i].transform.position, pentagons[i].transform.position, 108);
+     }
+    }
+  }
+  //back hemisphere
+  pentagons[6] = Object.Instantiate(pentagons[0], pentagons[0].transform.position*-1f, pentagons[0].transform.rotation);
 		pentagons[6].transform.Rotate(new Vector3(180,0,0));
-		for(int i = 1; i < 6; i++){
-			pentagons[i] = Object.Instantiate(pentagons[6], pentagons[6].transform.position, pentagons[6].transform.rotation);
-			pentagons[i].transform.RotateAround(Vector3.zero, edges[i-1].axis, 180 + 116.5f);
-			pentagons[i].transform.Rotate(new Vector3(0,0,180));
-   for(int j = 0; j < size - 1; j++){
-				hexagons[j] = Object.Instantiate(hexagon, pentagons[6].transform.position, pentagons[6].transform.rotation);
-				hexagons[j].transform.RotateAround(Vector3.zero, edges[i-1].axis, 270 + (116.5f/2)*(j+1));
-				hexagons[j].transform.Rotate(new Vector3(0, 0, 90 - (i - 3) * 252));
-			}
-		}
+  //initialize reletive hexagon positions for back
+  for(int i = 0; i < 5; i++){
+   for(int j = 1; j < size; j++){
+    int h = i*(size - 1) + (j - 1) + ((size-1) * 30);
+    hexagons[h] = Object.Instantiate(hexagon, pentagons[6].transform.position, pentagons[6].transform.rotation);
+    hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i].axis, 270 + (116.5f/size)*j);
+    hexagons[h].transform.Rotate(new Vector3(0, 0, 90 - (i - 2) * 252));
+   }
+  }
+  //initialize back half
+  for(int i = 7; i < 12; i++){
+   pentagons[i] = Object.Instantiate(pentagons[6], pentagons[6].transform.position, pentagons[6].transform.rotation);
+   pentagons[i].transform.RotateAround(Vector3.zero, pentEdges[i-7].axis, 180 + 116.5f);
+   pentagons[i].transform.Rotate(new Vector3(0, 0, 180));
+    for(int j = 0; j < 5; j++){
+     for(int k = 1; k < size; k++){
+      int h = i*5*(size-1) + (k-1);
+      int baseHex = j*(size - 1) + (k-1) + ((size-1) * 30);
+      hexagons[h] = Object.Instantiate(hexagon, hexagons[baseHex].transform.position, hexagons[baseHex].transform.rotation);
+      hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i-7].axis, 180 + 116.5f);
+      hexagons[h].transform.RotateAround(pentagons[i].transform.position, pentagons[i].transform.position, 108);
+     }
+    }
+  }
+
 		Destroy(hexagon);
 	}
 
