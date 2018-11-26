@@ -69,7 +69,7 @@ public class Polyhedron : MonoBehaviour
                 {
                     int h = i * (size - 1) + (j - 1);
                     hexagons[h] = Object.Instantiate(hexagon, pentagons[0].transform.position, pentagons[0].transform.rotation);
-                    hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i].axis, (-angle / (Mathf.Sqrt(2)* (radius))) * j);
+                    hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i].axis, (-(180 - angle) / size) * j);
                     hexagons[h].transform.Rotate(new Vector3(0, 0, 90 + (i - 2) * 252));
                 }
             }
