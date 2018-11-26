@@ -4,15 +4,27 @@ using UnityEngine;
 
 public class HexPrism : MonoBehaviour
 {
+
+    public int check = 0;
+
     public Edge[] edges = new Edge[6];
 
     private bool destroyed = false;
-
+    
     void OnTriggerEnter(Collider other)
     {
         if(destroyed == false){
             HexPrism script = other.gameObject.GetComponent<HexPrism>();
             script.destroyed = true;
+            Destroy(gameObject);
+        }
+    }
+
+    
+    private void Update()
+    {
+        if (gameObject.name != "hexagon" && (Input.GetKeyDown("u") || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow)))
+        {
             Destroy(gameObject);
         }
     }
