@@ -20,6 +20,16 @@ public class PentaPrism : MonoBehaviour
 {
     public Edge[] edges = new Edge[5];
 
+    public float sideLength = 2 * 1 * Mathf.Sin(180 / 5);
+
+    private void Update()
+    {
+        if (gameObject.name != "pentagon" && (Input.GetKeyDown("u") || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow)))
+        {
+            Destroy(gameObject);
+        }
+    }
+
     void Start()
     {
         Mesh mesh = new Mesh();

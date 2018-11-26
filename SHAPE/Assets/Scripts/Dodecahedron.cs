@@ -15,7 +15,7 @@ public class Dodecahedron : MonoBehaviour {
 		pentagons[0] = Object.Instantiate(pentagon, gameObject.transform.position, gameObject.transform.rotation);
 		pentagons[0].transform.Translate(Vector3.forward*radius);
 		pentagons[0].transform.Rotate(new Vector3(0,180,0));
-		Destroy(pentagon);
+		//Destroy(pentagon);
 		//initialize front half
 		for(int i = 1; i < 6; i++){
 			pentagons[i] = Object.Instantiate(pentagons[0], pentagons[0].transform.position, pentagons[0].transform.rotation);
