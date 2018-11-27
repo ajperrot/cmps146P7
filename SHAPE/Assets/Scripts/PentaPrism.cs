@@ -22,6 +22,12 @@ public class PentaPrism : MonoBehaviour
 
     public float sideLength = 2 * 1 * Mathf.Sin(180 / 5);
 
+    public float radius = 1;
+
+    public float inradius = Mathf.Cos(180 / 5);
+
+    public float diameter;
+
     private void Update()
     {
         if (gameObject.name != "pentagon" && (Input.GetKeyDown("u") || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow)))
@@ -32,6 +38,7 @@ public class PentaPrism : MonoBehaviour
 
     void Start()
     {
+        diameter = radius + inradius;
         Mesh mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
         //center at (0,0,0)
@@ -42,7 +49,7 @@ public class PentaPrism : MonoBehaviour
         float s1 = Mathf.Sin(2*pi/5);
         float s2 = Mathf.Sin(4*pi/5);
         //depth of the prism
-        float d = -0.5f;
+        float d = 0f;
         //front face
         Vector3 p0 = new Vector3(0,0,d);
         Vector3 p1 = new Vector3(0,1,d);

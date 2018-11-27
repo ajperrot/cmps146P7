@@ -5,9 +5,56 @@ using UnityEngine;
 public class Polyhedron : MonoBehaviour
 {
     bool check = true;
-    float angle = Mathf.Acos(-1 / Mathf.Sqrt(5)) * (180/Mathf.PI);
+    float angle = -180 + (Mathf.Acos(-1 / Mathf.Sqrt(5)) * (180/Mathf.PI));
     public float testNum;
     public float radius;
+    public int size;
+    public float radMod; //radius modifier
+
+    public GameObject pentagon;
+    public GameObject hexagon;
+
+    //Shape parameters for radius calculation
+    float pentRadius;
+    float pentInradius;
+    float pentDiam;
+    float hexRadius;
+    float hexInradius;
+    float hexDiam;
+    float sideLength;   
+
+
+    //angle jumps
+    float smallJump;
+    float bigJump;
+
+
+    // Use this for initialization
+    private void Start()
+    {
+        //testNum = 0;
+        //Debug.Log(angle);
+
+        //pentagon calculations
+        pentRadius = 1f;
+        pentInradius = Mathf.Cos(Mathf.PI / 5); //important for calculations
+        Debug.Log(pentInradius);
+
+        //sidelength gleened from pentagon, sideLength equal for both shapes
+        sideLength = 2 * pentRadius * Mathf.Sin(Mathf.PI / 5);
+
+        //hexagon calculations
+        hexRadius = sideLength / (2 * Mathf.Sin(Mathf.PI / 6));
+        hexInradius = hexRadius * (Mathf.Cos(Mathf.PI / 6)); //important for calculations
+
+        setRadius();
+
+        //Debug.Log(radius);
+
+
+
+
+    }
 
     private void Update()
     {
@@ -28,18 +75,10 @@ public class Polyhedron : MonoBehaviour
 
     }
 
-    private void Start()
-    {
-        testNum = 0;
-        Debug.Log(angle);
-    }
-
-    public int size;
-    public float radMod; //radius modifier
-    // Use this for initialization
     void LateUpdate()
     {
-        GameObject hexagon = GameObject.Find("hexagon");
+        hexagon = GameObject.Find("hexagon");
+        pentagon = GameObject.Find("pentagon");
         if (check == true)
         {
             //size: 1 = dodecahedron, +1 per hexagon between pentagons
@@ -47,10 +86,11 @@ public class Polyhedron : MonoBehaviour
             int facecount = 10 * T + 2;
             int hexcount = facecount - 12;
 
-            radius = testNum + (size * 1.2f) * 0.5f * Mathf.Sqrt((5 / 2) + (11 / 10) * Mathf.Sqrt(5));
+            //radius = testNum + (size * 1.2f) * 0.5f * Mathf.Sqrt((5 / 2) + (11 / 10) * Mathf.Sqrt(5));
+            setRadius();
+            //Debug.Log(radius);
             GameObject[] pentagons = new GameObject[12];
             GameObject[] hexagons = new GameObject[hexcount * 2];
-            GameObject pentagon = GameObject.Find("pentagon");
             Edge[] pentEdges = pentagon.GetComponent<PentaPrism>().edges;
 
             hexagon.transform.Translate(Vector3.forward * radius);
@@ -69,7 +109,14 @@ public class Polyhedron : MonoBehaviour
                 {
                     int h = i * (size - 1) + (j - 1);
                     hexagons[h] = Object.Instantiate(hexagon, pentagons[0].transform.position, pentagons[0].transform.rotation);
-                    hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i].axis, (-(180 - angle) / size) * j);
+                    if (j == 1)
+                    {
+                        hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i].axis, smallJump);
+                    }
+                    else
+                    {
+                        hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i].axis, smallJump + (bigJump * (j - 1)));
+                    }
                     hexagons[h].transform.Rotate(new Vector3(0, 0, 90 + (i - 2) * 252));
                 }
             }
@@ -77,7 +124,7 @@ public class Polyhedron : MonoBehaviour
             for (int i = 1; i < 6; i++)
             {
                 pentagons[i] = Object.Instantiate(pentagons[0], pentagons[0].transform.position, pentagons[0].transform.rotation);
-                pentagons[i].transform.RotateAround(Vector3.zero, pentEdges[i - 1].axis, 180 + angle);
+                pentagons[i].transform.RotateAround(Vector3.zero, pentEdges[i - 1].axis, angle);
                 pentagons[i].transform.Rotate(new Vector3(0, 0, 180));
 
                 for (int j = 0; j < 5; j++)
@@ -103,7 +150,12 @@ public class Polyhedron : MonoBehaviour
                 {
                     int h = i * (size - 1) + (j - 1) + ((size - 1) * 30);
                     hexagons[h] = Object.Instantiate(hexagon, pentagons[6].transform.position, pentagons[6].transform.rotation);
-                    hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i].axis, (-(180 - angle) / size) * j);
+                    if (j == 1) {
+                        hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i].axis, smallJump);
+                    } else
+                    {
+                        hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i].axis, smallJump + (bigJump * (j - 1)));
+                    }
                     hexagons[h].transform.Rotate(new Vector3(0, 0, 90 - (i - 2) * 252));
                 }
             }
@@ -111,7 +163,7 @@ public class Polyhedron : MonoBehaviour
             for (int i = 7; i < 12; i++)
             {
                 pentagons[i] = Object.Instantiate(pentagons[6], pentagons[6].transform.position, pentagons[6].transform.rotation);
-                pentagons[i].transform.RotateAround(Vector3.zero, pentEdges[i - 7].axis, 180 + angle);
+                pentagons[i].transform.RotateAround(Vector3.zero, pentEdges[i - 7].axis, angle);
                 pentagons[i].transform.Rotate(new Vector3(0, 0, 180));
                 for (int j = 0; j < 5; j++)
                 {
@@ -132,4 +184,19 @@ public class Polyhedron : MonoBehaviour
         hexagon.transform.position = new Vector3(0, 0, 0);
     }
 
+
+    private void setRadius()
+    {
+        //BS circumference estimate
+        float tempAngle = angle * -1f;
+        //Debug.Log(tempAngle);
+        float partialDist = ((size - 1) * 2 * hexInradius) + (2 * pentInradius);
+        Debug.Log(partialDist);
+        float circ = ((360 / tempAngle) * partialDist);
+        radius = circ / (2 * Mathf.PI);
+
+        smallJump = ((pentInradius + hexInradius) / partialDist) * angle;
+        bigJump = ((2 * hexInradius) / partialDist) * angle;
+    }
+    
 }

@@ -8,7 +8,7 @@ public class Dodecahedron : MonoBehaviour {
 	void Start () {
 		//size: 1 = dodecahedron, +1 per hexagon between pentagons
 		float radius = 0.5f * Mathf.Sqrt((5/2) + (11/10) * Mathf.Sqrt(5));
-	 GameObject[] pentagons = new GameObject[12];
+	    GameObject[] pentagons = new GameObject[12];
 		GameObject pentagon = GameObject.Find("pentagon");
 		Edge[] edges = pentagon.GetComponent<PentaPrism>().edges;
 

@@ -2,7 +2,7 @@
 using System;
 
 public class StreetViewCamera : MonoBehaviour {
-    public float speed = 1.0f;
+    public float speed = 3.0f;
     private float X;
     private float Y;
     GameObject pivot;
@@ -22,7 +22,10 @@ public class StreetViewCamera : MonoBehaviour {
     void Update() {
         if (Input.GetMouseButton(0)) {
             //transform.RotateAround(Vector3.zero, new Vector3(-Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X"), 0), speed);
-            pivot.transform.Rotate(new Vector3(-Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X"), 0));
+            Vector3 rVec = new Vector3(-Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X"), 0);
+            rVec *= speed;
+            pivot.transform.Rotate(rVec);
+
             //X = transform.rotation.eulerAngles.x;
             //Y = transform.rotation.eulerAngles.y;
             //transform.rotation = Quaternion.Euler(X, Y, 0);
