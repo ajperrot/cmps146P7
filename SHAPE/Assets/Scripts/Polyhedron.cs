@@ -91,6 +91,8 @@ public class Polyhedron : MonoBehaviour
             //Debug.Log(radius);
             GameObject[] pentagons = new GameObject[12];
             GameObject[] hexagons = new GameObject[hexcount * 2];
+            GameObject[] filler = new GameObject[hexcount * 2];
+            int fillerIndex = 0;
             Edge[] pentEdges = pentagon.GetComponent<PentaPrism>().edges;
 
             hexagon.transform.Translate(Vector3.forward * radius);
@@ -100,9 +102,8 @@ public class Polyhedron : MonoBehaviour
             pentagons[0] = Object.Instantiate(pentagon, gameObject.transform.position, gameObject.transform.rotation);
             pentagons[0].transform.Translate(Vector3.forward * radius);
             pentagons[0].transform.Rotate(new Vector3(0, 180, 0));
-            //Destroy(pentagon);
-            //initialize reletive hexagon positions
 
+            //initialize reletive hexagon positions
             for (int i = 0; i < 5; i++)
             {
                 for (int j = 1; j < size; j++)
@@ -118,16 +119,15 @@ public class Polyhedron : MonoBehaviour
                         hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i].axis, smallJump + (bigJump * (j - 1)));
                     }
                     hexagons[h].transform.Rotate(new Vector3(0, 0, 90 + (i - 2) * 252));
-
                 }
             }
+
             //initialize front half
             for (int i = 1; i < 6; i++)
             {
                 pentagons[i] = Object.Instantiate(pentagons[0], pentagons[0].transform.position, pentagons[0].transform.rotation);
                 pentagons[i].transform.RotateAround(Vector3.zero, pentEdges[i - 1].axis, angle);
                 pentagons[i].transform.Rotate(new Vector3(0, 0, 180));
-
                 for (int j = 0; j < 5; j++)
                 {
                     for (int k = 1; k < size; k++)
@@ -137,7 +137,23 @@ public class Polyhedron : MonoBehaviour
                         hexagons[h] = Object.Instantiate(hexagon, hexagons[baseHex].transform.position, hexagons[baseHex].transform.rotation);
                         hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i - 1].axis, angle);
                         hexagons[h].transform.RotateAround(pentagons[i].transform.position, pentagons[i].transform.position, 108);
-
+                        for (int l = 1; l < k; l++)
+                        {
+                            GameObject lastHex;
+                            if(l < 2)
+                            {
+                                lastHex = hexagons[h];
+                            }else
+                            {
+                                lastHex = filler[fillerIndex - 1];
+                            }
+                            //this should be perpendicular to the edge axis, i.e. going in the direction of the path
+                            Vector3 pentAxis = Vector3.Cross(pentEdges[i - 1].axis, pentagons[i].transform.position);
+                            filler[fillerIndex] = Object.Instantiate(hexagon, lastHex.transform.position, lastHex.transform.rotation);
+                            filler[fillerIndex].transform.RotateAround(Vector3.zero, pentEdges[i - 1].axis, bigJump / -2f);
+                            filler[fillerIndex].transform.RotateAround(Vector3.zero, pentAxis, bigJump);
+                            fillerIndex += 1;
+                        }
                     }
                 }
             }
@@ -161,6 +177,7 @@ public class Polyhedron : MonoBehaviour
                     hexagons[h].transform.Rotate(new Vector3(0, 0, 90 - (i - 2) * 252));
                 }
             }
+
             //initialize back half
             for (int i = 7; i < 12; i++)
             {
