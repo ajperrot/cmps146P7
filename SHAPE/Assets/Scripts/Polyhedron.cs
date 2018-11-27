@@ -118,6 +118,7 @@ public class Polyhedron : MonoBehaviour
                         hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i].axis, smallJump + (bigJump * (j - 1)));
                     }
                     hexagons[h].transform.Rotate(new Vector3(0, 0, 90 + (i - 2) * 252));
+
                 }
             }
             //initialize front half
@@ -134,8 +135,9 @@ public class Polyhedron : MonoBehaviour
                         int h = i * 5 * (size - 1) + (k - 1);
                         int baseHex = j * (size - 1) + (k - 1);
                         hexagons[h] = Object.Instantiate(hexagon, hexagons[baseHex].transform.position, hexagons[baseHex].transform.rotation);
-                        hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i - 1].axis, 180 + angle);
+                        hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i - 1].axis, angle);
                         hexagons[h].transform.RotateAround(pentagons[i].transform.position, pentagons[i].transform.position, 108);
+
                     }
                 }
             }
@@ -172,7 +174,7 @@ public class Polyhedron : MonoBehaviour
                         int h = i * 5 * (size - 1) + (k - 1);
                         int baseHex = j * (size - 1) + (k - 1) + ((size - 1) * 30);
                         hexagons[h] = Object.Instantiate(hexagon, hexagons[baseHex].transform.position, hexagons[baseHex].transform.rotation);
-                        hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i - 7].axis, 180 + angle);
+                        hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i - 7].axis, angle);
                         hexagons[h].transform.RotateAround(pentagons[i].transform.position, pentagons[i].transform.position, 108);
                     }
                 }
@@ -180,6 +182,17 @@ public class Polyhedron : MonoBehaviour
             //Destroy(hexagon);
             hexagon.transform.position = new Vector3(0, 0, 0);
         }
+/*
+        //I WROTE THIS BY ALEX PERROTTIvvvvv
+        for (int l = 1; l < k; l++)
+        {
+            GameObject lastHex = hexagons[h + l - 1];
+            Vector3 pentAxis = Vector3.Cross(pentEdges[i].axis, Vector3.up);
+            hexagons[h + l] = Object.Instantiate(hexagon, lastHex.transform.position, lastHex.transform.rotation);
+            hexagons[h + l].transform.RotateAround(Vector3.zero, pentEdges[i - 1].axis, bigJump / -2f);
+            hexagons[h + l].transform.RotateAround(Vector3.zero, pentAxis, bigJump * 0.75f);
+
+        }*/
         check = false;
         hexagon.transform.position = new Vector3(0, 0, 0);
     }
@@ -197,6 +210,7 @@ public class Polyhedron : MonoBehaviour
 
         smallJump = ((pentInradius + hexInradius) / partialDist) * angle;
         bigJump = ((2 * hexInradius) / partialDist) * angle;
+
     }
     
 }

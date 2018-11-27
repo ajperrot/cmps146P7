@@ -44,7 +44,7 @@ public class HexPrism : MonoBehaviour
         float xd = Mathf.Sqrt(3)/2f;
         float yd = (1f/2f);
         //depth of prism
-        float d = 0f;
+        float d = -1f;
         //front face
         Vector3 p0 = new Vector3(0,0,d);
         Vector3 p1 = new Vector3(0,1,d);
