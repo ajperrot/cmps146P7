@@ -92,7 +92,7 @@ public class Polyhedron : MonoBehaviour
                     }
                 }
             }
-            /*
+            
             //back hemisphere
             pentagons[6] = Object.Instantiate(pentagons[0], pentagons[0].transform.position * -1f, pentagons[0].transform.rotation);
             pentagons[6].transform.Rotate(new Vector3(180, 0, 0));
@@ -103,15 +103,15 @@ public class Polyhedron : MonoBehaviour
                 {
                     int h = i * (size - 1) + (j - 1) + ((size - 1) * 30);
                     hexagons[h] = Object.Instantiate(hexagon, pentagons[6].transform.position, pentagons[6].transform.rotation);
-                    hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i].axis, (116.5f / size) * j);
-                    hexagons[h].transform.Rotate(new Vector3(0, 0, -(i - 2) * 252));
+                    hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i].axis, (-(180 - angle) / size) * j);
+                    hexagons[h].transform.Rotate(new Vector3(0, 0, 90 - (i - 2) * 252));
                 }
             }
             //initialize back half
             for (int i = 7; i < 12; i++)
             {
                 pentagons[i] = Object.Instantiate(pentagons[6], pentagons[6].transform.position, pentagons[6].transform.rotation);
-                pentagons[i].transform.RotateAround(Vector3.zero, pentEdges[i - 7].axis, 180 + 116.5f);
+                pentagons[i].transform.RotateAround(Vector3.zero, pentEdges[i - 7].axis, 180 + angle);
                 pentagons[i].transform.Rotate(new Vector3(0, 0, 180));
                 for (int j = 0; j < 5; j++)
                 {
@@ -120,12 +120,11 @@ public class Polyhedron : MonoBehaviour
                         int h = i * 5 * (size - 1) + (k - 1);
                         int baseHex = j * (size - 1) + (k - 1) + ((size - 1) * 30);
                         hexagons[h] = Object.Instantiate(hexagon, hexagons[baseHex].transform.position, hexagons[baseHex].transform.rotation);
-                        hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i - 7].axis, 180 + 116.5f);
+                        hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i - 7].axis, 180 + angle);
                         hexagons[h].transform.RotateAround(pentagons[i].transform.position, pentagons[i].transform.position, 108);
                     }
                 }
             }
-            */
             //Destroy(hexagon);
             hexagon.transform.position = new Vector3(0, 0, 0);
         }
