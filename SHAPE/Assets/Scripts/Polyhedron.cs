@@ -145,7 +145,7 @@ public class Polyhedron : MonoBehaviour
             //back hemisphere
             pentagons[6] = Object.Instantiate(pentagons[0], pentagons[0].transform.position * -1f, pentagons[0].transform.rotation);
             pentagons[6].transform.Rotate(new Vector3(180, 0, 0));
-            //initialize reletive hexagon positions for back
+            //initialize relative hexagon positions for back
             for (int i = 0; i < 5; i++)
             {
                 for (int j = 1; j < size; j++)
