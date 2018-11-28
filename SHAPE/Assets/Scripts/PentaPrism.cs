@@ -49,7 +49,7 @@ public class PentaPrism : MonoBehaviour
         float s1 = Mathf.Sin(2*pi/5);
         float s2 = Mathf.Sin(4*pi/5);
         //depth of the prism
-        float d = -1f;
+        float d = -2f;
         //front face
         Vector3 p0 = new Vector3(0,0,d);
         Vector3 p1 = new Vector3(0,1,d);

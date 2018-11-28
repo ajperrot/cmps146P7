@@ -4,25 +4,19 @@ using UnityEngine;
 
 public class HexPrism : MonoBehaviour
 {
-
     public int check = 0;
-
     public float sideLength = 2 * 1 * Mathf.Sin(180 / 5); //given form Penta Prism
-
     public float radius; //not useful
-
     public float inradius; //useful
-
     public Edge[] edges = new Edge[6];
-
-    private bool destroyed = false;
+    public bool destroyed = false;
     
     void OnTriggerEnter(Collider other)
     {
+        HexPrism script = other.gameObject.GetComponent<HexPrism>();
         if(destroyed == false){
-            HexPrism script = other.gameObject.GetComponent<HexPrism>();
             script.destroyed = true;
-            Destroy(gameObject);
+            Destroy(other.gameObject);
         }
     }
 
@@ -44,7 +38,7 @@ public class HexPrism : MonoBehaviour
         float xd = Mathf.Sqrt(3)/2f;
         float yd = (1f/2f);
         //depth of prism
-        float d = -1f;
+        float d = -2f;
         //front face
         Vector3 p0 = new Vector3(0,0,d);
         Vector3 p1 = new Vector3(0,1,d);
