@@ -159,11 +159,6 @@ public class Polyhedron : MonoBehaviour
                 
                 for (int j = 0; j < 5; j++)
                 {
-                    //work in progress to prevent re-filling unnecessarily
-                    if(((i + j) % 5) == 0 && i != 5)
-                    {
-                        continue;
-                    }
                     for (int k = 1; k < size; k++)
                     {
                         int h = i * 5 * (size - 1) + (k - 1);
@@ -175,16 +170,41 @@ public class Polyhedron : MonoBehaviour
                         backHex[h] = Object.Instantiate(hexagons[h], hexagons[h].transform.position * -1f, hexagons[h].transform.rotation);
                         backHex[h].transform.Rotate(new Vector3(0, 180, 180));
                     }
-                }
-                for(int j = 0; j < fillerInit; j++)
-                {
-                    int fillerCopy = fillerIndex % fillerInit;
-                    filler[fillerIndex] = Object.Instantiate(hexagon, filler[fillerCopy].transform.position, filler[fillerCopy].transform.rotation);
-                    filler[fillerIndex].transform.RotateAround(Vector3.zero, pentEdges[i - 1].axis, angle);
-                    filler[fillerIndex].transform.RotateAround(pentagons[i].transform.position, pentagons[i].transform.position, 108);
-                    //back version unneccessary
-                    fillerIndex += 1;
-
+                    //work in progress to prevent re-filling unnecessarily
+                    switch(i){
+                        case 1:
+                        case 2:
+                        case 3:
+                            if(j - (i - 1) != 2){
+                                fillerIndex += fillerInit / 5;
+                                continue;
+                            }
+                            break;
+                        case 4:
+                            if(j != 0){
+                                fillerIndex += fillerInit / 5;
+                                continue;
+                            }
+                            break;
+                        case 5:
+                             if(j != 1){
+                                fillerIndex += fillerInit / 5;
+                                continue;
+                            }
+                            break;
+                    }
+                    //copy triangles
+                    for(int k = 0; k < fillerInit / 5; k++)
+                    {
+                        int fillerCopy = fillerIndex % fillerInit;
+                        filler[fillerIndex] = Object.Instantiate(hexagon, filler[fillerCopy].transform.position, filler[fillerCopy].transform.rotation);
+                        filler[fillerIndex].transform.RotateAround(Vector3.zero, pentEdges[i - 1].axis, angle);
+                        filler[fillerIndex].transform.RotateAround(pentagons[i].transform.position, pentagons[i].transform.position, 108);
+                        //back
+                        backFill[fillerIndex] = Object.Instantiate(filler[fillerIndex], filler[fillerIndex].transform.position * -1f, filler[fillerIndex].transform.rotation);
+                        backFill[fillerIndex].transform.Rotate(new Vector3(0, 180, 180));
+                        fillerIndex += 1;
+                    }
                 }
             }
 
