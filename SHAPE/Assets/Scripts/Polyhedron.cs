@@ -131,19 +131,12 @@ public class Polyhedron : MonoBehaviour
 
                     for (int k = 1; k < j; k++)
                     {
-                        GameObject lastHex;
-                        if(k < 2)
-                        {
-                            lastHex = hexagons[h];
-                        }else
-                        {
-                            lastHex = filler[fillerIndex - 1];
-                        }
+                        GameObject lastHex = hexagons[h];
                         //this should be perpendicular to the edge axis, i.e. going in the direction of the path
                         Vector3 pentAxis = pentagons[nextPent].transform.position - pentagons[0].transform.position;
                         filler[fillerIndex] = Object.Instantiate(hexagon, lastHex.transform.position, lastHex.transform.rotation);
-                        filler[fillerIndex].transform.RotateAround(Vector3.zero, pentEdges[i].axis, bigJump / -2f);
-                        filler[fillerIndex].transform.RotateAround(Vector3.zero, pentAxis, smallJump);
+                        filler[fillerIndex].transform.RotateAround(Vector3.zero, pentEdges[i].axis, bigJump * k / -2f);
+                        filler[fillerIndex].transform.RotateAround(Vector3.zero, pentAxis, smallJump * k);
                         //back
                         backFill[fillerIndex] = Object.Instantiate(filler[fillerIndex], filler[fillerIndex].transform.position * -1f, filler[fillerIndex].transform.rotation);
                         backFill[fillerIndex].transform.Rotate(new Vector3(0, 180, 180));
