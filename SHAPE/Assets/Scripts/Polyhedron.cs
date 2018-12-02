@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class Polyhedron : MonoBehaviour
 {
+    public GameObject[] tiles;
+    List<GameObject> tileList = new List<GameObject>();
+
     bool check = true;
+    bool firstUpdate = true;
     float angle = -180 + (Mathf.Acos(-1 / Mathf.Sqrt(5)) * (180/Mathf.PI));
     public float testNum;
     public float radius;
@@ -32,12 +36,9 @@ public class Polyhedron : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-        //testNum = 0;
-
         //pentagon calculations
         pentRadius = 1f;
         pentInradius = Mathf.Cos(Mathf.PI / 5); //important for calculations
-        //Debug.Log(pentInradius);
 
         //sidelength gleened from pentagon, sideLength equal for both shapes
         sideLength = 2 * pentRadius * Mathf.Sin(Mathf.PI / 5);
@@ -47,6 +48,163 @@ public class Polyhedron : MonoBehaviour
         hexInradius = hexRadius * (Mathf.Cos(Mathf.PI / 6)); //important for calculations
 
         setRadius();
+
+        hexagon = GameObject.Find("hexagon");
+        hexagon.transform.localScale = new Vector3(1, 1, 1);
+        pentagon = GameObject.Find("pentagon");
+
+        //size: 1 = dodecahedron, +1 per hexagon between pentagons
+        int T = size * size;
+        int facecount = 10 * T + 2;
+        int hexcount = facecount - 12;
+
+        tiles = new GameObject[facecount];
+
+        setRadius();
+        GameObject[] pentagons = new GameObject[6];
+        GameObject[] backPent = new GameObject[6];
+        GameObject[] hexagons = new GameObject[hexcount*2];
+        GameObject[] backHex = new GameObject[hexcount*2];        
+        GameObject[] filler = new GameObject[hexcount*2];
+        GameObject[] backFill = new GameObject[hexcount*2];
+        int fillerIndex = 0;
+        int fillerInit = 0;
+        Edge[] pentEdges = pentagon.GetComponent<PentaPrism>().edges;
+
+        hexagon.transform.Translate(Vector3.forward * radius);
+        hexagon.transform.Rotate(new Vector3(0, 180, 0));
+
+        //base front pentagon
+        pentagons[0] = Object.Instantiate(pentagon, gameObject.transform.position, gameObject.transform.rotation);
+        pentagons[0].transform.Translate(Vector3.forward * radius);
+        pentagons[0].transform.Rotate(new Vector3(0, 180, 0));
+        //back
+        backPent[0] = Object.Instantiate(pentagons[0], pentagons[0].transform.position * -1f, pentagons[0].transform.rotation);
+        backPent[0].transform.Rotate(new Vector3(0, 180, 180));
+        //add to tileList
+        tileList.Add(pentagons[0]);
+        tileList.Add(backPent[0]);
+
+        //initialize reletive hexagon positions
+        for (int i = 0; i < 5; i++)
+        {
+            int nextPent = i + 1;
+            pentagons[nextPent] = Object.Instantiate(pentagons[0], pentagons[0].transform.position, pentagons[0].transform.rotation);
+            pentagons[nextPent].transform.RotateAround(Vector3.zero, pentEdges[i].axis, angle);
+            pentagons[nextPent].transform.Rotate(new Vector3(0, 0, 180));
+            //back
+            backPent[nextPent] = Object.Instantiate(pentagons[nextPent], pentagons[nextPent].transform.position * -1f, pentagons[nextPent].transform.rotation);
+            backPent[nextPent].transform.Rotate(new Vector3(0, 180, 180));
+            //tileList
+            tileList.Add(pentagons[nextPent]);
+            tileList.Add(backPent[nextPent]);
+            for (int j = 1; j < size; j++)
+            {
+                int h = i * (size - 1) + (j - 1);
+                hexagons[h] = Object.Instantiate(hexagon, pentagons[0].transform.position, pentagons[0].transform.rotation);
+                if (j == 1)
+                {
+                    hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i].axis, smallJump);
+                }
+                else
+                {
+                    hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i].axis, smallJump + (bigJump * (j - 1)));
+                }
+                hexagons[h].transform.Rotate(new Vector3(0, 0, 90 + (i - 2) * 252));
+                //back
+                backHex[h] = Object.Instantiate(hexagons[h], hexagons[h].transform.position * -1f, hexagons[h].transform.rotation);
+                backHex[h].transform.Rotate(new Vector3(0, 180, 180));
+                //tileList
+                tileList.Add(hexagons[h]);
+                tileList.Add(backHex[h]);
+                for (int k = 1; k < j; k++)
+                {
+                    GameObject lastHex = hexagons[h];
+                    //this should be perpendicular to the edge axis, i.e. going in the direction of the path
+                    Vector3 pentAxis = pentagons[nextPent].transform.position - pentagons[0].transform.position;
+                    filler[fillerIndex] = Object.Instantiate(hexagon, lastHex.transform.position, lastHex.transform.rotation);
+                    filler[fillerIndex].transform.RotateAround(Vector3.zero, pentEdges[i].axis, bigJump * k / -2f);
+                    filler[fillerIndex].transform.RotateAround(Vector3.zero, pentAxis, smallJump * k);
+                    //back
+                    backFill[fillerIndex] = Object.Instantiate(filler[fillerIndex], filler[fillerIndex].transform.position * -1f, filler[fillerIndex].transform.rotation);
+                    backFill[fillerIndex].transform.Rotate(new Vector3(0, 180, 180));
+                    //tileList
+                    tileList.Add(filler[fillerIndex]);
+                    tileList.Add(backFill[fillerIndex]);
+                    //increment index
+                    fillerIndex += 1;
+                }
+            }
+        }
+        fillerInit = fillerIndex;
+
+        //copy paths for other pentagons
+        for (int i = 1; i < 6; i++)
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                for (int k = 1; k < size; k++)
+                {
+                    int h = i * 5 * (size - 1) + (k - 1);
+                    int baseHex = j * (size - 1) + (k - 1);
+                    hexagons[h] = Object.Instantiate(hexagon, hexagons[baseHex].transform.position, hexagons[baseHex].transform.rotation);
+                    hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i - 1].axis, angle);
+                    hexagons[h].transform.RotateAround(pentagons[i].transform.position, pentagons[i].transform.position, 108);
+                    //back
+                    backHex[h] = Object.Instantiate(hexagons[h], hexagons[h].transform.position * -1f, hexagons[h].transform.rotation);
+                    backHex[h].transform.Rotate(new Vector3(0, 180, 180));
+                    //tileList
+                    tileList.Add(hexagons[h]);
+                    tileList.Add(backHex[h]);
+                }
+                //prevent re-filling unnecessarily
+                switch(i){
+                    case 1:
+                    case 2:
+                    case 3:
+                        if(j - (i - 1) != 2){
+                            fillerIndex += fillerInit / 5;
+                            continue;
+                        }
+                        break;
+                    case 4:
+                        if(j != 0){
+                            fillerIndex += fillerInit / 5;
+                            continue;
+                        }
+                        break;
+                    case 5:
+                            if(j != 1){
+                            fillerIndex += fillerInit / 5;
+                            continue;
+                        }
+                        break;
+                }
+                //copy triangles
+                for(int k = 0; k < fillerInit / 5; k++)
+                {
+                    int fillerCopy = fillerIndex % fillerInit;
+                    filler[fillerIndex] = Object.Instantiate(hexagon, filler[fillerCopy].transform.position, filler[fillerCopy].transform.rotation);
+                    filler[fillerIndex].transform.RotateAround(Vector3.zero, pentEdges[i - 1].axis, angle);
+                    filler[fillerIndex].transform.RotateAround(pentagons[i].transform.position, pentagons[i].transform.position, 108);
+                    //back
+                    backFill[fillerIndex] = Object.Instantiate(filler[fillerIndex], filler[fillerIndex].transform.position * -1f, filler[fillerIndex].transform.rotation);
+                    backFill[fillerIndex].transform.Rotate(new Vector3(0, 180, 180));
+                    //tileList
+                    tileList.Add(filler[fillerIndex]);
+                    tileList.Add(backFill[fillerIndex]);
+                    //increment index
+                    fillerIndex += 1;
+                }
+            }
+        }
+
+        //Destroy(hexagon);
+        //Destroy(pentagon);
+        hexagon.transform.position = new Vector3(0, 0, 0);
+        check = false;
+        firstUpdate = true;
+        hexagon.transform.position = new Vector3(0, 0, 0);
 
     }
 
@@ -71,14 +229,45 @@ public class Polyhedron : MonoBehaviour
 
     void LateUpdate()
     {
-        hexagon = GameObject.Find("hexagon");
-        pentagon = GameObject.Find("pentagon");
+        if(firstUpdate)
+        {
+            
+            for(int i = tileList.Count - 1; i >=0; i--)
+            {
+                if (tileList[i] == null)
+                {
+                    tileList.RemoveAt(i);
+                }
+            }
+
+            tiles = new GameObject[tileList.Count];
+            for(int i = tileList.Count - 1; i >=0; i--)
+            {
+                BoxCollider box = tileList[i].GetComponent<BoxCollider>();
+                Rigidbody body = tileList[i].GetComponent<Rigidbody>();
+                HexPrism hexScript = tileList[i].GetComponent<HexPrism>();
+                PentaPrism pentaScript = tileList[i].GetComponent<PentaPrism>();
+                Destroy(box);
+                Destroy(body);
+                Destroy(hexScript);
+                Destroy(pentaScript);
+                tiles[i] = tileList[i];
+            }
+            firstUpdate = false;
+        }
+        
+        //jsut for testing beyond here
         if (check == true)
         {
+            hexagon = GameObject.Find("hexagon");
+            hexagon.transform.localScale = new Vector3(1, 1, 1);
+            pentagon = GameObject.Find("pentagon");
             //size: 1 = dodecahedron, +1 per hexagon between pentagons
             int T = size * size;
             int facecount = 10 * T + 2;
             int hexcount = facecount - 12;
+
+            tiles = new GameObject[facecount];
 
             setRadius();
             GameObject[] pentagons = new GameObject[6];
@@ -204,6 +393,23 @@ public class Polyhedron : MonoBehaviour
             //Destroy(hexagon);
             //Destroy(pentagon);
             hexagon.transform.position = new Vector3(0, 0, 0);
+
+            for(int i = 0; i < 6; i++)
+            {
+                tileList.Add(pentagons[i]);
+                tileList.Add(backPent[i]);
+            }
+            for(int i = 0; i < hexcount*2; i++){
+                if(hexagons[i]){
+                    tileList.Add(hexagons[i]);
+                    tileList.Add(backHex[i]);
+                }
+                if(filler[i]){
+                    tileList.Add(filler[i]);
+                    tileList.Add(backFill[i]);
+                }
+
+            }
         }
         check = false;
         hexagon.transform.position = new Vector3(0, 0, 0);
