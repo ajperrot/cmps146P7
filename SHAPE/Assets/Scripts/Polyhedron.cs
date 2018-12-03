@@ -198,14 +198,12 @@ public class Polyhedron : MonoBehaviour
                 }
             }
         }
-
         //Destroy(hexagon);
         //Destroy(pentagon);
         hexagon.transform.position = new Vector3(0, 0, 0);
         check = false;
         firstUpdate = true;
         hexagon.transform.position = new Vector3(0, 0, 0);
-
     }
 
     private void Update()
@@ -254,6 +252,7 @@ public class Polyhedron : MonoBehaviour
                 tiles[i] = tileList[i];
             }
             firstUpdate = false;
+            gameObject.AddComponent(typeof(World));
         }
         
         //jsut for testing beyond here

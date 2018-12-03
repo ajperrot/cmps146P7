@@ -5,7 +5,7 @@ using UnityEngine;
 public class Properties : MonoBehaviour {
 
 				public int biome = 0; //enumeration
-				public float altitude = 0.5f;
+				public float altitude = -1f;
 				public float latitude;
 
 				// Use this for initialization
