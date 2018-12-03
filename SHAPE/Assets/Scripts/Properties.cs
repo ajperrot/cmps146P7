@@ -5,7 +5,7 @@ using UnityEngine;
 public class Properties : MonoBehaviour {
 
 				public int biome = 0; //enumeration
-				public float altitude = -1f;
+				public float altitude = 0f;
 				public float latitude;
 
 				// Use this for initialization
@@ -20,11 +20,11 @@ public class Properties : MonoBehaviour {
 
 				}
 
-				public void setAltitude(float newAlt)
+				public void changeAltitude(float newAlt)
 				{
 					   altitude = newAlt;
 								Vector3 scale = gameObject.transform.localScale;
-								scale.z = newAlt * 0.8506508f;
+								scale.z = ((newAlt + 8000) / 4000) * 0.8506508f;
 								gameObject.transform.localScale = scale;
 				}
 }
