@@ -24,7 +24,7 @@ public class Properties : MonoBehaviour {
 				{
 					   altitude = newAlt;
 								Vector3 scale = gameObject.transform.localScale;
-								scale.z = ((newAlt + 8000) / 4000) * 0.8506508f;
+								scale.z = ((newAlt + 8001) / 4000) * 0.8506508f;
 								gameObject.transform.localScale = scale;
 				}
 }
