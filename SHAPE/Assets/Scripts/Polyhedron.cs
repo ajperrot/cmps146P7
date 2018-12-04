@@ -270,7 +270,6 @@ public class Polyhedron : MonoBehaviour
 
         smallJump = ((pentInradius + hexInradius) / partialDist) * angle;
         bigJump = ((2 * hexInradius) / partialDist) * angle;
-
     }
     
 }
