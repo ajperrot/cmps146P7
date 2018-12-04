@@ -117,6 +117,7 @@ public class Polyhedron : MonoBehaviour
                 //tileList
                 tileList.Add(hexagons[h]);
                 tileList.Add(backHex[h]);
+                
                 for (int k = 1; k < j; k++)
                 {
                     GameObject lastHex = hexagons[h];
@@ -134,6 +135,7 @@ public class Polyhedron : MonoBehaviour
                     //increment index
                     fillerIndex += 1;
                 }
+                
             }
         }
         fillerInit = fillerIndex;
@@ -254,7 +256,7 @@ public class Polyhedron : MonoBehaviour
             firstUpdate = false;
             gameObject.AddComponent(typeof(World));
         }
-        
+        /*
         //jsut for testing beyond here
         if (check == true)
         {
@@ -412,8 +414,8 @@ public class Polyhedron : MonoBehaviour
         }
         check = false;
         hexagon.transform.position = new Vector3(0, 0, 0);
+        */
     }
-
 
     private void setRadius()
     {
