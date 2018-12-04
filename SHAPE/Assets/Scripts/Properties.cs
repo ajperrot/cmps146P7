@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class Properties : MonoBehaviour {
 
-				public int biome = 0; //enumeration
-				public float altitude = 0f;
 				public float latitude;
+				public int id = 0;
+				public float altitude = 0f;
+				public GameObject[] adjacentTiles;
+				public int biome = 0; //enumeration
+				
+				
 
 				// Use this for initialization
 				void Start()

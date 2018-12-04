@@ -10,9 +10,25 @@ public class World : MonoBehaviour {
 				void Start () {
 					   Polyhedron polyhedron = gameObject.GetComponent<Polyhedron>();
 								tiles = polyhedron.tiles;
-								//set altitude and biome for each tile
-								foreach(GameObject tile in tiles){
-									
+								float radius = polyhedron.radius;
+								//set id, altitude, adjacency, and biome for each tile
+								for(int i = 0; i < tiles.Length; i++)
+								{
+								    GameObject tile = tiles[i];
+											 Properties props = tile.GetComponent<Properties>();
+												//set id
+												props.id = i;
+												//set altitude
+												float x = (tile.transform.rotation.y / Mathf.PI) * 10;
+												print(x);
+												float y = (tile.transform.position.y / radius) * 10;
+												print(y);
+												float noise = Mathf.PerlinNoise(x, y);
+												props.changeAltitude((noise * 16000) - 8000);
+												//set adjacency
+												props.adjacentTiles = adjTiles(tile);
+												//set tempurature
+
 								}
 				}
 
@@ -28,9 +44,10 @@ public class World : MonoBehaviour {
 									   //if it has 6 sides
 									   sides = 6;
 								}
-								tiles.OrderBy(t=>(t.transform.position - tile.transform.position).sqrMagnitude);
+								GameObject[] temp = (GameObject[])tiles.Clone();
+								temp.OrderBy(t=>(t.transform.position - tile.transform.position));
 								//skip the closest element (the same one as tile)
-								return tiles.Take(sides + 1).Skip(1).Cast<GameObject>().ToArray();
+								return temp.Take(sides + 1).Skip(1).Cast<GameObject>().ToArray();
 				}
 	
 }
