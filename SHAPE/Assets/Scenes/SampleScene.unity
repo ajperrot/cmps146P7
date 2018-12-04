@@ -143,6 +143,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sideLength: -1.9835577
+  radius: 1
+  inradius: -0.12796369
+  diameter: 0
 --- !u!4 &115645106
 Transform:
   m_ObjectHideFlags: 0
@@ -293,10 +296,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e15a09fff23f8478bb3551655fc0f92f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tiles: []
   testNum: 0
   radius: 0
-  size: 2
+  size: 10
   radMod: 1
+  pentagon: {fileID: 0}
+  hexagon: {fileID: 0}
 --- !u!23 &433812780
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -589,6 +595,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   check: 0
+  sideLength: -1.9835577
+  radius: 0
+  inradius: 0
+  destroyed: 0
 --- !u!23 &1762849938
 MeshRenderer:
   m_ObjectHideFlags: 0

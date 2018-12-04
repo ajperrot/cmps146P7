@@ -63,9 +63,14 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Dodecahedron.cs" />
     <Compile Include="Assets\Scripts\HexPrism.cs" />
+    <Compile Include="Assets\Scripts\LayeredNoise.cs" />
+    <Compile Include="Assets\Scripts\Ocean.cs" />
     <Compile Include="Assets\Scripts\PentaPrism.cs" />
+    <Compile Include="Assets\Scripts\Perlin.cs" />
     <Compile Include="Assets\Scripts\Polyhedron.cs" />
+    <Compile Include="Assets\Scripts\Properties.cs" />
     <Compile Include="Assets\Scripts\StreetViewCamera.cs" />
+    <Compile Include="Assets\Scripts\World.cs" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>D:/FallQuarter/Globe/Repo2/SHAPE/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
