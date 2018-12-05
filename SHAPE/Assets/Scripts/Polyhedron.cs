@@ -7,7 +7,7 @@ public class Polyhedron : MonoBehaviour
     public GameObject[] tiles;
     List<GameObject> tileList = new List<GameObject>();
 
-    bool check = true;
+    //bool check = true;
     bool firstUpdate = true;
     float angle = -180 + (Mathf.Acos(-1 / Mathf.Sqrt(5)) * (180/Mathf.PI));
     public float testNum;
@@ -203,27 +203,12 @@ public class Polyhedron : MonoBehaviour
         //Destroy(hexagon);
         //Destroy(pentagon);
         hexagon.transform.position = new Vector3(0, 0, 0);
-        check = false;
         firstUpdate = true;
         hexagon.transform.position = new Vector3(0, 0, 0);
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown("u"))
-        {
-            check = true;
-        }
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            testNum += 0.01f;
-            check = true;
-        }
-        if (Input.GetKey(KeyCode.DownArrow))
-        {
-            testNum -= 0.01f;
-            check = true;
-        }
 
     }
 

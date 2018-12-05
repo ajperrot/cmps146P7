@@ -18,8 +18,35 @@ public class Properties : MonoBehaviour {
     // 4 = jungle
     // 5 = desert
     // 6 = ocean
-				
-				
+
+	class Species
+	{
+		//data on species population on one tile
+		public int count; //# of creatures of species on this tile
+		public int idealTemp; //temperature it prefers
+		public bool carnivore; //can it eat meat
+		public bool herbivore; //can it eat non-meat
+		public bool flying; //can it make big altitude jumps from tile to tile
+		public bool aquatic; //can it survive only in water
+		public bool amphibious; // can it survive in both land and water
+
+		public Species()
+		{
+			count = 0;
+			idealTemp = 0;
+			carnivore = false;
+			herbivore = false;
+			flying = false;
+			aquatic = false;
+			amphibious = false;
+		}
+
+		public string ToString()
+		{
+			return("count: "+this.count+", idealTemp: "+this.idealTemp+", carnivore: "+this.carnivore+", herbivore: "+this.herbivore+", flying: "+this.flying+", aquatic: "+this.aquatic+", amphibious: "+this.amphibious+"\n");
+		}
+	}
+	List<Species> population = new List<Species>(); //all species living on a tile
 
 	// Use this for initialization
 	void Start()
@@ -90,6 +117,46 @@ public class Properties : MonoBehaviour {
 			}
 		}
 		this.temperature = newTemp;
+	}
+
+	public void creatureAct()
+	{
+		//update creature population via possible creature actions
+	}
+
+	public void populate()
+	{
+		//intialize this tile with 2 herbivorous species for the biome
+		Species newLife = new Species();
+		newLife.count = 2;
+		newLife.herbivore = true;
+		if(Random.value < 0.5)
+		{
+			//50% chance to be flight-capable
+			newLife.flying = true;
+		}
+		if(biome == 6)
+		{
+			//if this is an ocean
+			newLife.idealTemp = Mathf.RoundToInt(Random.value * 30);
+			if(Random.value < 0.5)
+			{
+				newLife.aquatic = true;
+			}else
+			{
+				newLife.amphibious = true;
+			}
+		}else
+		{
+			//if this is not an ocean
+			if(Random.value < 0.5)
+			{
+				newLife.amphibious = true;
+			}
+			newLife.idealTemp = Mathf.RoundToInt((biome - 1) * 10 + Random.value * 10);
+		}
+		//add this new species to the population
+		population.Add(newLife);
 	}
 
 }

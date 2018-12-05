@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class World : MonoBehaviour {
 	GameObject[] tiles;
+	private List<Properties> liveTiles = new List<Properties>();
 
 	// Use this for initialization
 	void Start () {
@@ -69,8 +70,23 @@ public class World : MonoBehaviour {
 					tempTemp = -50;
 				}
 				props.changeTemperature(tempTemp);
-
 			}
+			//populate a certain number of tiles, adding them to liveTiles
+			if(i == 0)
+			{
+				//populate only the first tile
+				props.populate();
+				liveTiles.Add(props);
+			}
+		}
+	}
+
+	void Update()
+	{
+		//update all tiles with life on them
+		foreach(Properties props in liveTiles)
+		{
+			props.creatureAct();
 		}
 	}
 
