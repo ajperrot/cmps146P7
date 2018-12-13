@@ -10,17 +10,17 @@ public class HexPrism : MonoBehaviour
     public float inradius; //useful
     public Edge[] edges = new Edge[6];
     public bool destroyed = false;
-    
+
     void OnTriggerEnter(Collider other)
     {
         HexPrism script = other.gameObject.GetComponent<HexPrism>();
-        if(destroyed == false && script != null){
+        if (destroyed == false && script != null) {
             script.destroyed = true;
             Destroy(other.gameObject);
         }
     }
 
-    
+
     private void Update()
     {
         if (gameObject.name != "hexagon" && (Input.GetKeyDown("u") || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow)))
@@ -35,28 +35,28 @@ public class HexPrism : MonoBehaviour
         GetComponent<MeshFilter>().mesh = mesh;
         //center at (0,0,0)
         //going in clockwise order from top
-        float xd = Mathf.Sqrt(3)/2f;
-        float yd = (1f/2f);
+        float xd = Mathf.Sqrt(3) / 2f;
+        float yd = (1f / 2f);
         //depth of prism
         float d = -1f;
         //front face
-        Vector3 p0 = new Vector3(0,0,d);
-        Vector3 p1 = new Vector3(0,1,d);
-        Vector3 p2 = new Vector3(xd,yd,d);
-        Vector3 p3 = new Vector3(xd,-yd,d);
-        Vector3 p4 = new Vector3(0,-1,d);
-        Vector3 p5 = new Vector3(-xd,-yd,d);
-		Vector3 p6 = new Vector3(-xd,yd,d);
-		//back face
-        Vector3 p7 = new Vector3(0,1,0);
-        Vector3 p8 = new Vector3(xd,yd,0);
-        Vector3 p9 = new Vector3(xd,-yd,0);
-        Vector3 p10 = new Vector3(0,-1,0);
-        Vector3 p11 = new Vector3(-xd,-yd,0);
-		Vector3 p12 = new Vector3(-xd,yd,0);
+        Vector3 p0 = new Vector3(0, 0, d);
+        Vector3 p1 = new Vector3(0, 1 * 1.1f, d);
+        Vector3 p2 = new Vector3(xd * 1.1f, yd * 1.1f, d);
+        Vector3 p3 = new Vector3(xd * 1.1f, -yd * 1.1f, d);
+        Vector3 p4 = new Vector3(0, -1 * 1.1f, d);
+        Vector3 p5 = new Vector3(-xd * 1.1f, -yd * 1.1f, d);
+        Vector3 p6 = new Vector3(-xd * 1.1f, yd * 1.1f, d);
+        //back face
+        Vector3 p7 = new Vector3(0, 1, 0);
+        Vector3 p8 = new Vector3(xd, yd, 0);
+        Vector3 p9 = new Vector3(xd, -yd, 0);
+        Vector3 p10 = new Vector3(0, -1, 0);
+        Vector3 p11 = new Vector3(-xd, -yd, 0);
+        Vector3 p12 = new Vector3(-xd, yd, 0);
 
         mesh.vertices = new Vector3[]{p0,p1,p2,p3,p4,p5,p6,
-								         p7,p8,p9,p10,p11,p12};
+                                         p7,p8,p9,p10,p11,p12};
         mesh.triangles = new int[]{
 			//front face
             0,1,2,
@@ -84,13 +84,18 @@ public class HexPrism : MonoBehaviour
             12,1,6,
             12,7,1
         };
-		mesh.RecalculateNormals();
+        mesh.RecalculateNormals();
         mesh.RecalculateBounds();
-        
+
         for (int i = 6; i < 11; i++)
         {
             edges[i - 6] = new Edge(mesh.vertices[i], mesh.vertices[i + 1]);
         }
         edges[5] = new Edge(mesh.vertices[11], mesh.vertices[6]);
+    } 
+
+    public void updateSize()
+    {
+
     }
 }

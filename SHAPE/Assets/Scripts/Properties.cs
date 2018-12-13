@@ -237,7 +237,7 @@ public class Properties : MonoBehaviour {
 			}
 
 			//intraspecies breeding if space remains
-			if(currentPop < maxPop)
+			if(currentPop < maxPop && (herd.carnivore == false || population.Count > 2))
 			{
 				herd.count *= herd.birthrate;
 			}
