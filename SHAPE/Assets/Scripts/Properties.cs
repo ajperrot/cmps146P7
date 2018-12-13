@@ -13,6 +13,13 @@ public class Properties : MonoBehaviour {
 	public GameObject[] adjacentTiles;
 	public int temperature;
 	public int biome; //enumeration
+	Color[] forests = { new Color(0f / 255f, 102f / 255f, 0f / 255f), new Color(0f / 255f, 70f / 255f, 0f / 255f), new Color(0f / 255f, 102f / 255f, 34f / 255f) };
+    Color[] ocean = { new Color(0f / 255f, 0f / 255f, 255f / 255f), new Color(0f / 255f, 0f / 255f, 204f / 255f), new Color(0f / 255f, 0f / 255f, 153f / 255f) };
+    Color[] plains = { new Color(204f / 255f, 255f / 255f, 51f / 255f), new Color(204f / 255f, 255f / 255f, 102f / 255f), new Color(204f / 255f, 255f / 255f, 153f / 255f) };
+    Color[] deserts = { new Color(255f / 255f, 204f / 255f, 179f / 255f), new Color(255f / 255f, 204f / 255f, 153f / 255f), new Color(255f / 255f, 204f / 255f, 102f / 255f) };
+    Color[] jungles = { new Color(105f / 255f, 255f / 255f, 51f / 255f), new Color(51f / 255f, 204f / 255f, 51f / 255f), new Color(0f / 255f, 255f / 255f, 0f / 255f) };
+    Color[] taiga = { new Color(255f / 255f, 255f / 255f, 255f / 255f), new Color(240f / 255f, 240f / 255f, 240f / 255f), new Color(230f / 255f, 230f / 255f, 255f / 255f)};
+    Color[] Arctic = { new Color(125f / 255f, 255f / 255f, 255f / 255f), new Color(125f / 255f, 150f / 255f, 255f / 255f), new Color(125f / 255f, 200f / 255f, 255f / 255f) };
 	//biomes are in order of heat:
     // 0 = arctic
     // 1 = taiga
@@ -68,6 +75,54 @@ public class Properties : MonoBehaviour {
 			copy.amphibious = this.amphibious;
 			return copy;
 		}
+
+		public Species Breed(Species mom){
+			Species son = new Species();
+			//cut and conjoin names for the son
+			string firstHalf = this.name.Substring(0, this.name.Length / 2);
+			string secondHalf = mom.name.Substring(mom.name.Length / 2);
+			son.name = firstHalf + secondHalf;
+			son.count = 2;
+			son.idealTemp = Random.Range(this.idealTemp, mom.idealTemp);
+			son.birthrate = Random.Range(this.birthrate, mom.birthrate);
+			float seed = Random.value;
+			if(seed < 0.25)
+			{
+				son.carnivore = true;
+				son.herbivore = false;
+			}
+			else
+			{
+				son.carnivore = false;
+				son.herbivore = true;
+				if(seed < 0.5)
+				{
+					son.flying = true;
+				}
+				else
+				{
+					son.flying = this.flying;
+					if(seed < 0.75)
+					{
+						son.amphibious = true;
+						
+					}
+					else
+					{
+						son.amphibious = mom.amphibious;
+					}
+				}
+			}
+			if(son.amphibious == false)
+			{
+				son.aquatic = this.aquatic;
+			}
+			else
+			{
+				son.aquatic = false;
+			}
+			return son;
+		}
 	}
 	List<Species> population = new List<Species>(); //all species living on a tile
 
@@ -115,31 +170,32 @@ public class Properties : MonoBehaviour {
 
     public void changeBiome(int newBiome)
     {
-        Renderer rend = gameObject.GetComponent<Renderer>();
-        this.biome = newBiome;
-        switch(newBiome){
-            case 0:
-                rend.material.SetColor("_Color", Color.cyan);
-                break;
-            case 1:
-                rend.material.SetColor("_Color", Color.white);
-                break;
-            case 2:
-                rend.material.SetColor("_Color", Color.gray);
-                break;
-            case 3:
-                rend.material.SetColor("_Color", Color.yellow);
-                break;
-            case 4:
-                rend.material.SetColor("_Color", Color.green);
-                break;
-            case 5:
-                rend.material.SetColor("_Color", Color.red);
-                break;
-            case 6:
-                rend.material.SetColor("_Color", Color.blue);
-                break;
-        }
+        Renderer rend = gameObject.GetComponent<Renderer>();
+        this.biome = newBiome;
+        var temp = Random.Range(0, 3);
+        switch (newBiome){
+            case 0:
+                rend.material.SetColor("_Color", Arctic[temp]);
+                break;
+            case 1:
+                rend.material.SetColor("_Color", taiga[temp]);
+                break;
+            case 2:
+                rend.material.SetColor("_Color", forests[temp]);
+                break;
+            case 3:
+                rend.material.SetColor("_Color", plains[temp]);
+                break;
+            case 4:
+                rend.material.SetColor("_Color", jungles[temp]);
+                break;
+            case 5:
+                rend.material.SetColor("_Color", deserts[temp]);
+                break;
+            case 6:
+                rend.material.SetColor("_Color", ocean[temp]);
+                break;
+        }
     }
 
 	//sets a new temperature and biome if necessary
@@ -165,7 +221,6 @@ public class Properties : MonoBehaviour {
 
 	public void FixedUpdate()
 	{
-
 		//update creature birth
 		for(int i = 0; i < population.Count; i++)
 		{
@@ -177,7 +232,6 @@ public class Properties : MonoBehaviour {
 			//end if the species is dead to avoid errors
 			if(herd.count < 1)
 			{
-				//print("went extinct");//test
 				population.RemoveAt(i);
 				return;
 			}
@@ -185,13 +239,11 @@ public class Properties : MonoBehaviour {
 			//intraspecies breeding if space remains
 			if(currentPop < maxPop)
 			{
-				//print("maxPop = "+maxPop);//test
 				herd.count *= herd.birthrate;
 			}
 
 			//we'll add it back at the end
 			currentPop -= originalCount;
-			//print(herd.count);//test
 			
 			//eat
 			if(herd.carnivore)
@@ -234,17 +286,21 @@ public class Properties : MonoBehaviour {
 
 			//die based on tile's hospitality
 			float deathrate = Mathf.Abs(.05f * (herd.idealTemp - temperature));
+			if(biome == 6 && herd.aquatic != true && herd.amphibious != true)
+			{
+				deathrate = 1;
+			}
 			if(deathrate > 1)
 			{
 				deathrate = 1;
 			}
-			//print("dr = "+deathrate);//test
+
 			herd.count = Mathf.RoundToInt((1 - deathrate) * herd.count);
 
 			//if the species is dying or overcrowded, consider leaving
 			if(herd.count > 1 && (deathrate > 0.5 || currentPop + originalCount > maxPop))
 			{
-				//print("considering migration");//test
+
 				Properties adjProp = null;
 				//migrate based on adjacent tiles' hospitality
 				float[] modifiers = new float[adjacentTiles.Length];
@@ -290,7 +346,7 @@ public class Properties : MonoBehaviour {
 					//half the species moves at a time. This is just to keep things running
 					emmigrants.count /= 2;
 					herd.count /= 2;
-					//print("migrating");//test
+
 					bool found = false;
 					foreach(Species pop in adjProp.population)
 					{
@@ -312,7 +368,7 @@ public class Properties : MonoBehaviour {
 
 			//update current population count
 			currentPop += herd.count;
-			//print("count = "+herd.count);//test
+
 			if(herd.count > 1)
 			{
 				population.RemoveAt(i);
@@ -326,17 +382,51 @@ public class Properties : MonoBehaviour {
 			else
 			{
 				population.RemoveAt(i);
-				//print("went extinct");//test
+
 				return;
 			}
 		}
+
+		//handle interspecies breeding
+		if(currentPop < maxPop && population.Count > 1 && Random.value > 0.05)
+		{
+			int dadIndex = Random.Range(0, population.Count);
+			Species dad = population[dadIndex];
+			Species mom;
+			if(dadIndex == 0)
+			{
+				mom = population[dadIndex + 1];
+			}
+			else
+			{
+				mom = population[dadIndex - 1];
+			}
+			Species son = dad.Breed(mom);
+			bool exists = false;
+			foreach(Species pop in population)
+			{
+				if(pop.name == son.name)
+				{
+					//if it already exists just add to the existing population
+					exists = true;
+					pop.count += son.count;
+					break;
+				}
+			}
+			if(exists == false)
+			{
+				population.Add(son);
+			}
+			currentPop += son.count;
+		}
+		
 	}
 
 	public void populate()
 	{
 		//intialize this tile with 2-100 herbivorous species for the biome
 		Species newLife = new Species();
-		newLife.count = Mathf.RoundToInt(Random.Range(2, 100));
+		newLife.count = Random.Range(2, 100);
 		newLife.birthrate = Mathf.RoundToInt(Random.Range(2, 10));
 		newLife.herbivore = true;
 		if(Random.value < 0.5)
@@ -436,7 +526,7 @@ public class Properties : MonoBehaviour {
 					}
 					else
 					{
-						newLife.name = "Grizzly Bear";
+						newLife.name = "Panda Bear";
 					}
 				}
 				break;
@@ -493,7 +583,7 @@ public class Properties : MonoBehaviour {
 				{
 					if(newLife.amphibious)
 					{
-						newLife.name = "Arial Salamander";
+						newLife.name = "Aerial Salamander";
 					}
 					else
 					{
@@ -531,7 +621,7 @@ public class Properties : MonoBehaviour {
 	}
 
 	/*---------------------UI----------------------*/
-	private void OnMouseEnter()
+	private void OnMouseOver()
     {	
 		if(meshRend.isVisible)
  		{
@@ -548,7 +638,7 @@ public class Properties : MonoBehaviour {
 				testText.text += "\n"+herd.ToString();
 			}
 
-			//print(testText.text);//test
+
 			//set visual
 			Color color = meshRend.material.color;
 			color.a = 0.5f;
