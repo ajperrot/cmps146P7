@@ -207,11 +207,6 @@ public class Polyhedron : MonoBehaviour
         hexagon.transform.position = new Vector3(0, 0, 0);
     }
 
-    private void Update()
-    {
-
-    }
-
     void LateUpdate()
     {
         if(firstUpdate)
@@ -228,11 +223,11 @@ public class Polyhedron : MonoBehaviour
             tiles = new GameObject[tileList.Count];
             for(int i = tileList.Count - 1; i >=0; i--)
             {
-                BoxCollider box = tileList[i].GetComponent<BoxCollider>();
+                //BoxCollider box = tileList[i].GetComponent<BoxCollider>();
                 Rigidbody body = tileList[i].GetComponent<Rigidbody>();
                 HexPrism hexScript = tileList[i].GetComponent<HexPrism>();
                 PentaPrism pentaScript = tileList[i].GetComponent<PentaPrism>();
-                Destroy(box);
+                //Destroy(box);
                 Destroy(body);
                 Destroy(hexScript);
                 Destroy(pentaScript);

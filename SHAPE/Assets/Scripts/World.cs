@@ -5,10 +5,9 @@ using UnityEngine;
 
 public class World : MonoBehaviour {
 	GameObject[] tiles;
-	private List<Properties> liveTiles = new List<Properties>();
 
 	// Use this for initialization
-	void Start () {
+	void Start(){
         float addx = Random.Range(0f, 255f);
         float addy = Random.Range(0f, 255f);
 
@@ -70,24 +69,20 @@ public class World : MonoBehaviour {
 					tempTemp = -50;
 				}
 				props.changeTemperature(tempTemp);
+
 			}
+
+			//set max population
+			props.maxPop = Mathf.RoundToInt(Random.Range(50, 200));
+
 			//populate a certain number of tiles, adding them to liveTiles
 			if(i == 0)
 			{
-				//populate only the first tile
+				//populate every _th tile
 				props.populate();
-				liveTiles.Add(props);
 			}
 		}
-	}
-
-	void Update()
-	{
-		//update all tiles with life on them
-		foreach(Properties props in liveTiles)
-		{
-			props.creatureAct();
-		}
+		Application.targetFrameRate = 30;
 	}
 
 	GameObject[] adjTiles(GameObject tile)
@@ -154,5 +149,5 @@ public class World : MonoBehaviour {
 		// -1 indicates no water on the planet
 		return -1;
 	}
-	
+
 }

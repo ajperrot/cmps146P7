@@ -14,7 +14,7 @@ public class HexPrism : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         HexPrism script = other.gameObject.GetComponent<HexPrism>();
-        if(destroyed == false){
+        if(destroyed == false && script != null){
             script.destroyed = true;
             Destroy(other.gameObject);
         }
