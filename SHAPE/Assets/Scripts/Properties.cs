@@ -52,7 +52,7 @@ public class Properties : MonoBehaviour {
 
 		public override string ToString()
 		{
-			return("count: "+this.count+"\n  idealTemp: "+this.idealTemp+", birthrate: "+this.birthrate+", carnivore: "+this.carnivore+", herbivore: "+this.herbivore+"\n  flying: "+this.flying+", aquatic: "+this.aquatic+", amphibious: "+this.amphibious+"\n");
+			return(this.name+", count: "+this.count+"\n  idealTemp: "+this.idealTemp+", birthrate: "+this.birthrate+", carnivore: "+this.carnivore+", herbivore: "+this.herbivore+"\n  flying: "+this.flying+", aquatic: "+this.aquatic+", amphibious: "+this.amphibious+"\n");
 		}
 
 		public Species Copy(){
@@ -84,9 +84,32 @@ public class Properties : MonoBehaviour {
 	public void changeAltitude(float newAlt)
 	{
 		altitude = newAlt;
+        if(altitude < 0) {
+            altitude = altitude / 100;
+        }
+        if (newAlt <= 0)
+        {
+            newAlt = -100;
+        }
+        else if (newAlt <= 1000)
+        {
+            newAlt = 500;
+        }
+        else if (newAlt <= 2000)
+        {
+            newAlt = 1500;
+        }
+        else if (newAlt <= 3000)
+        {
+            newAlt = 2500;
+        }
+        else if (newAlt <= 4000)
+            newAlt = 3500;
+        else
+            newAlt = 4500;
 		Vector3 scale = gameObject.transform.localScale;
-		//scale function based around scale 2 = sea level
-		scale.z = ((newAlt + 8025) / 4000) * 0.8506508f;
+        //scale function based around scale 2 = sea level
+        scale.z = ((newAlt + 8025) / 4000) * 0.8506508f * 1.2f - 1.8f;
 		gameObject.transform.localScale = scale;
 	}
 
@@ -140,7 +163,7 @@ public class Properties : MonoBehaviour {
 		this.temperature = newTemp;
 	}
 
-	public void Update()
+	public void FixedUpdate()
 	{
 
 		//update creature birth
@@ -154,7 +177,7 @@ public class Properties : MonoBehaviour {
 			//end if the species is dead to avoid errors
 			if(herd.count < 1)
 			{
-				print("went extinct");//test
+				//print("went extinct");//test
 				population.RemoveAt(i);
 				return;
 			}
@@ -221,7 +244,7 @@ public class Properties : MonoBehaviour {
 			//if the species is dying or overcrowded, consider leaving
 			if(herd.count > 1 && (deathrate > 0.5 || currentPop + originalCount > maxPop))
 			{
-				print("considering migration");
+				//print("considering migration");//test
 				Properties adjProp = null;
 				//migrate based on adjacent tiles' hospitality
 				float[] modifiers = new float[adjacentTiles.Length];
@@ -266,16 +289,30 @@ public class Properties : MonoBehaviour {
 					Species emmigrants = herd.Copy();
 					//half the species moves at a time. This is just to keep things running
 					emmigrants.count /= 2;
-					print("migrating");//test
-					//adjProp.population.Add(emmigrants);
-					//adjProp.currentPop += emmigrants.count;
-					//herd.count /= 2;
+					herd.count /= 2;
+					//print("migrating");//test
+					bool found = false;
+					foreach(Species pop in adjProp.population)
+					{
+						if(pop.name == emmigrants.name)
+						{
+							pop.count += emmigrants.count;
+							found = true;
+							break;
+						}
+					}
+					if(found == false)
+					{
+						//if the species does not already exist there
+						adjProp.population.Add(emmigrants);
+					}
+					adjProp.currentPop += emmigrants.count;
 				}
 			}
 
 			//update current population count
 			currentPop += herd.count;
-			print("count = "+herd.count);//test
+			//print("count = "+herd.count);//test
 			if(herd.count > 1)
 			{
 				population.RemoveAt(i);
@@ -289,7 +326,7 @@ public class Properties : MonoBehaviour {
 			else
 			{
 				population.RemoveAt(i);
-				print("went extinct");//test
+				//print("went extinct");//test
 				return;
 			}
 		}
@@ -327,6 +364,166 @@ public class Properties : MonoBehaviour {
 			}
 			newLife.idealTemp = Mathf.RoundToInt((biome - 1) * 10 + Random.value * 10);
 		}
+
+		//set name
+		switch(biome)
+		{
+			case 0:
+				if(newLife.flying)
+				{
+					if(newLife.amphibious)
+					{
+						newLife.name = "Flying Penguin";
+					}
+					else
+					{
+						newLife.name = "Reanimated Pterodactyl";
+					}
+				}
+				else
+				{
+					if(newLife.amphibious)
+					{
+						newLife.name = "Walrus";
+					}
+					else
+					{
+						newLife.name = "Polar Bear";
+					}
+				}
+				break;
+			case 1:
+				if(newLife.flying)
+				{
+					if(newLife.amphibious)
+					{
+						newLife.name = "Seal";
+					}
+					else
+					{
+						newLife.name = "Crossbill";
+					}
+				}
+				else
+				{
+					if(newLife.amphibious)
+					{
+						newLife.name = "Leopard Frog";
+					}
+					else
+					{
+						newLife.name = "Moose";
+					}
+				}
+				break;
+			case 2:
+				if(newLife.flying)
+				{
+					if(newLife.amphibious)
+					{
+						newLife.name = "Flying Tree Frog";
+					}
+					else
+					{
+						newLife.name = "Woodpecker";
+					}
+				}
+				else
+				{
+					if(newLife.amphibious)
+					{
+						newLife.name = "Poison Dart Frog";
+					}
+					else
+					{
+						newLife.name = "Grizzly Bear";
+					}
+				}
+				break;
+			case 3:
+				if(newLife.flying)
+				{
+					if(newLife.amphibious)
+					{
+						newLife.name = "Airborne Otter";
+					}
+					else
+					{
+						newLife.name = "Condor";
+					}
+				}
+				else
+				{
+					if(newLife.amphibious)
+					{
+						newLife.name = "Beaver";
+					}
+					else
+					{
+						newLife.name = "Groundhog";
+					}
+				}
+				break;
+			case 4:
+				if(newLife.flying)
+				{
+					if(newLife.amphibious)
+					{
+						newLife.name = "Mosquito";
+					}
+					else
+					{
+						newLife.name = "Flamingo";
+					}
+				}
+				else
+				{
+					if(newLife.amphibious)
+					{
+						newLife.name = "Aligator";
+					}
+					else
+					{
+						newLife.name = "Ape";
+					}
+				}
+				break;
+			case 5:
+				if(newLife.flying)
+				{
+					if(newLife.amphibious)
+					{
+						newLife.name = "Arial Salamander";
+					}
+					else
+					{
+						newLife.name = "Vulture";
+					}
+				}
+				else
+				{
+					if(newLife.amphibious)
+					{
+						newLife.name = "Salamander";
+					}
+					else
+					{
+						newLife.name = "Camel";
+					}
+				}
+				break;
+			case 6:
+				if(newLife.flying)
+				{
+					newLife.name = "Seagull";
+				}
+				else
+				{
+					newLife.name = "Fish";
+				}
+				break;
+		}
+
 		//add this new species to the population
 		population.Add(newLife);
 		//update current population count
@@ -348,7 +545,7 @@ public class Properties : MonoBehaviour {
 			for(int i = 0; i < population.Count; i++)
 			{
 				Species herd = population[i];
-				testText.text += herd.ToString() + "\n";
+				testText.text += "\n"+herd.ToString();
 			}
 
 			//print(testText.text);//test

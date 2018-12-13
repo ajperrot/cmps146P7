@@ -76,7 +76,7 @@ public class World : MonoBehaviour {
 			props.maxPop = Mathf.RoundToInt(Random.Range(50, 200));
 
 			//populate a certain number of tiles, adding them to liveTiles
-			if(i == 0)
+			if(i % 3 == 0)
 			{
 				//populate every _th tile
 				props.populate();
