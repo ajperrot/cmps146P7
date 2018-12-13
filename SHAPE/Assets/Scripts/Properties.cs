@@ -298,7 +298,7 @@ public class Properties : MonoBehaviour {
 			herd.count = Mathf.RoundToInt((1 - deathrate) * herd.count);
 
 			//if the species is dying or overcrowded, consider leaving
-			if(herd.count > 1 && (deathrate > 0.5 || currentPop + originalCount > maxPop))
+			if(herd.count > 1 && (deathrate > 0.5 || currentPop + originalCount > maxPop || (herd.carnivore && population.Count == 1)));
 			{
 
 				Properties adjProp = null;
