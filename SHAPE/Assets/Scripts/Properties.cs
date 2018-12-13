@@ -13,6 +13,7 @@ public class Properties : MonoBehaviour {
 	public GameObject[] adjacentTiles;
 	public int temperature;
 	public int biome; //enumeration
+    public GameObject globe;
 	Color[] forests = { new Color(0f / 255f, 102f / 255f, 0f / 255f), new Color(0f / 255f, 70f / 255f, 0f / 255f), new Color(0f / 255f, 102f / 255f, 34f / 255f) };
     Color[] ocean = { new Color(0f / 255f, 0f / 255f, 255f / 255f), new Color(0f / 255f, 0f / 255f, 204f / 255f), new Color(0f / 255f, 0f / 255f, 153f / 255f) };
     Color[] plains = { new Color(204f / 255f, 255f / 255f, 51f / 255f), new Color(204f / 255f, 255f / 255f, 102f / 255f), new Color(204f / 255f, 255f / 255f, 153f / 255f) };
@@ -143,30 +144,37 @@ public class Properties : MonoBehaviour {
             altitude = altitude / 100;
         }
         if (newAlt <= 0)
-        {
             newAlt = -100;
-        }
         else if (newAlt <= 1000)
-        {
             newAlt = 500;
-        }
         else if (newAlt <= 2000)
-        {
             newAlt = 1500;
-        }
         else if (newAlt <= 3000)
-        {
             newAlt = 2500;
-        }
         else if (newAlt <= 4000)
             newAlt = 3500;
-        else
+        else if (newAlt <= 5000)
             newAlt = 4500;
-		Vector3 scale = gameObject.transform.localScale;
+        else if (newAlt <= 6000)
+            newAlt = 5500;
+        else if (newAlt <= 7000)
+            newAlt = 6500;
+        else
+            newAlt = 7500;
+        Vector3 scale = gameObject.transform.localScale;
         //scale function based around scale 2 = sea level
-        scale.z = ((newAlt + 8025) / 4000) * 0.8506508f * 1.2f - 1.8f;
-		gameObject.transform.localScale = scale;
-	}
+        scale.z = ((newAlt + 8025) / 4000) * 1.2f * globe.GetComponent<Polyhedron>().radius/10 - (2f * globe.GetComponent<Polyhedron>().radius/10);
+        if (GetComponent<PentaPrism>())
+            GetComponent<PentaPrism>().changeDim();
+        else if (GetComponent<HexPrism>())
+        {
+            GetComponent<HexPrism>().changeDim(globe.GetComponent<Polyhedron>().radius, scale.z);
+            scale.z *= 0.8506508f;
+            scale.x = scale.y = 1.17557f;
+        }
+        scale *= 0.95f;
+        gameObject.transform.localScale = scale;
+    }
 
     public void changeBiome(int newBiome)
     {

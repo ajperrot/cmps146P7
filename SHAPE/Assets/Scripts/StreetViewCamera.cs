@@ -8,14 +8,16 @@ public class StreetViewCamera : MonoBehaviour {
     GameObject pivot;
     public GameObject planet;
     public float cameraRadius;
+    float minimum;
 
     private void Start()
     {
         pivot = gameObject.transform.parent.gameObject;
 
 
-        cameraRadius = planet.GetComponent<Polyhedron>().radius + (float)(Math.Sqrt(planet.GetComponent<Polyhedron>().radius)) + 5f;
+        cameraRadius = minimum = planet.GetComponent<Polyhedron>().radius + (float)(Math.Sqrt(planet.GetComponent<Polyhedron>().radius)) + 5f;
         cameraRadius *= -1;
+        minimum *= -1;
         gameObject.transform.localPosition = new Vector3(0, 0, cameraRadius);
 }
 
@@ -30,11 +32,10 @@ public class StreetViewCamera : MonoBehaviour {
             //Y = transform.rotation.eulerAngles.y;
             //transform.rotation = Quaternion.Euler(X, Y, 0);
         }
-        if (Input.anyKey)
-        {
-            cameraRadius = planet.GetComponent<Polyhedron>().radius + (float)(Math.Sqrt(planet.GetComponent<Polyhedron>().radius)) + 5f;
-            cameraRadius *= -1;
-            gameObject.transform.localPosition = new Vector3(0, 0, cameraRadius);
-        }
+        //cameraRadius = planet.GetComponent<Polyhedron>().radius + (float)(Math.Sqrt(planet.GetComponent<Polyhedron>().radius)) + 5f;
+        cameraRadius += Input.GetAxis("Vertical");
+        gameObject.transform.localPosition = new Vector3(0, 0, cameraRadius);
+        if (cameraRadius > minimum)
+            cameraRadius = minimum;
     }
 }

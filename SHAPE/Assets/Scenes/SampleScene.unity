@@ -222,6 +222,7 @@ MonoBehaviour:
   adjacentTiles: []
   temperature: 0
   biome: 0
+  globe: {fileID: 433812778}
 --- !u!65 &115645110
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -332,7 +333,7 @@ MonoBehaviour:
   tiles: []
   testNum: 0
   radius: 0
-  size: 15
+  size: 20
   radMod: 1
   pentagon: {fileID: 0}
   hexagon: {fileID: 0}
@@ -458,7 +459,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 
 --- !u!222 &482143005
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1050,3 +1051,4 @@ MonoBehaviour:
   adjacentTiles: []
   temperature: 0
   biome: 0
+  globe: {fileID: 433812778}
