@@ -100,20 +100,16 @@ public class PentaPrism : MonoBehaviour
         edges[4] = new Edge(mesh.vertices[10], mesh.vertices[6]);
     }
 
-    public void changeDim()
+    public void changeDim(float globeRad, float zVal)
     {
+        var multiply = (zVal + globeRad) / globeRad;
         Vector3[] vertices = GetComponent<MeshFilter>().mesh.vertices;
         Mesh mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
         mesh.Clear();
         for (int i = 1; i < 6; i++)
         {
-            Debug.Log("Print 1: " +  i + ": "+ vertices[i][0]);
-            Debug.Log("Print 2: " + i + ": " + vertices[i].x);
             vertices[i].x *= 1.1f;
-            vertices[i].y *= 1.1f;
-            Debug.Log("Print 3: " + i + ": " + vertices[i][0]);
-            Debug.Log("Print 4: " + i + ": " + vertices[i].x);
         }
         mesh.vertices = vertices;
         mesh.triangles = new int[]{

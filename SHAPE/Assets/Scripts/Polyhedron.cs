@@ -10,6 +10,7 @@ public class Polyhedron : MonoBehaviour
     //bool check = true;
     bool firstUpdate = true;
     float angle = -180 + (Mathf.Acos(-1 / Mathf.Sqrt(5)) * (180/Mathf.PI));
+    float angle2;
     public float testNum;
     public float radius;
     public int size;
@@ -31,6 +32,8 @@ public class Polyhedron : MonoBehaviour
     //angle jumps
     float smallJump;
     float bigJump;
+    float smallJump2;
+    float bigJump2;
     //float triJump;
 
     // Use this for initialization
@@ -39,6 +42,7 @@ public class Polyhedron : MonoBehaviour
         //pentagon calculations
         pentRadius = 1f;
         pentInradius = Mathf.Cos(Mathf.PI / 5); //important for calculations
+        pentDiam = pentRadius + pentInradius;
 
         //sidelength gleened from pentagon, sideLength equal for both shapes
         sideLength = 2 * pentRadius * Mathf.Sin(Mathf.PI / 5);
@@ -52,7 +56,11 @@ public class Polyhedron : MonoBehaviour
         hexagon = GameObject.Find("hexagon");
         hexagon.transform.localScale = new Vector3(1, 1, 1);
         pentagon = GameObject.Find("pentagon");
-
+        //angle2 = (((2 * pentRadius) + sideLength) / ((4 * pentDiam) + (2 * sideLength))) * 360;
+        angle2 = (360 + (angle * 2)) / 2;
+        angle2 *= -1;
+        Debug.Log("angle 1: " + angle);
+        Debug.Log("angle 2: " + angle2);
         //size: 1 = dodecahedron, +1 per hexagon between pentagons
         int T = size * size;
         int facecount = 10 * T + 2;
@@ -109,6 +117,7 @@ public class Polyhedron : MonoBehaviour
                 else
                 {
                     hexagons[h].transform.RotateAround(Vector3.zero, pentEdges[i].axis, smallJump + (bigJump * (j - 1)));
+
                 }
                 hexagons[h].transform.Rotate(new Vector3(0, 0, 90 + (i - 2) * 252));
                 //back
@@ -117,28 +126,66 @@ public class Polyhedron : MonoBehaviour
                 //tileList
                 tileList.Add(hexagons[h]);
                 tileList.Add(backHex[h]);
-                
+
                 for (int k = 1; k < j; k++)
                 {
-                    GameObject lastHex = hexagons[h];
-                    //this should be perpendicular to the edge axis, i.e. going in the direction of the path
-                    Vector3 pentAxis = pentagons[nextPent].transform.position - pentagons[0].transform.position;
-                    filler[fillerIndex] = Object.Instantiate(hexagon, lastHex.transform.position, lastHex.transform.rotation);
-                    filler[fillerIndex].transform.RotateAround(Vector3.zero, pentEdges[i].axis, bigJump * k / -2f);
-                    filler[fillerIndex].transform.RotateAround(Vector3.zero, pentAxis, smallJump * k);
-                    //back
-                    backFill[fillerIndex] = Object.Instantiate(filler[fillerIndex], filler[fillerIndex].transform.position * -1f, filler[fillerIndex].transform.rotation);
-                    backFill[fillerIndex].transform.Rotate(new Vector3(0, 180, 180));
-                    //tileList
-                    tileList.Add(filler[fillerIndex]);
-                    tileList.Add(backFill[fillerIndex]);
-                    //increment index
-                    fillerIndex += 1;
+                    
+                       GameObject lastHex = hexagons[h];
+                       //this should be perpendicular to the edge axis, i.e. going in the direction of the path
+                       Vector3 pentAxis = pentagons[nextPent].transform.position - pentagons[0].transform.position;
+                       filler[fillerIndex] = Object.Instantiate(hexagon, lastHex.transform.position, lastHex.transform.rotation);
+                       filler[fillerIndex].transform.RotateAround(Vector3.zero, pentEdges[i].axis, bigJump * k / -2f);
+                       filler[fillerIndex].transform.RotateAround(Vector3.zero, pentAxis, smallJump * k);
+                       //back
+                       backFill[fillerIndex] = Object.Instantiate(filler[fillerIndex], filler[fillerIndex].transform.position * -1f, filler[fillerIndex].transform.rotation);
+                       backFill[fillerIndex].transform.Rotate(new Vector3(0, 180, 180));
+                       //tileList
+                       tileList.Add(filler[fillerIndex]);
+                       tileList.Add(backFill[fillerIndex]);
+                       //increment index
+                       fillerIndex += 1;
+                       
                 }
                 
+                
             }
+            /*
+            for (int j = 1; j < size + 1; j++)
+            {
+                if (j == 1)
+                {
+                }
+                else
+                {
+                    filler[fillerIndex] = Object.Instantiate(hexagon, pentagons[0].transform.position, pentagons[0].transform.rotation);
+                    if (i < 4)
+                        filler[fillerIndex].transform.RotateAround(Vector3.zero, (pentEdges[i + 1].axis - pentEdges[i].axis) / 2 + pentEdges[i].axis, smallJump2 + (bigJump2 * (j - 2)) );
+                    else
+                        filler[fillerIndex].transform.RotateAround(Vector3.zero, (pentEdges[0].axis - pentEdges[4].axis) / 2 + pentEdges[4].axis, smallJump2 + (bigJump2 * (j - 2)));
+
+                    filler[fillerIndex].transform.Rotate(new Vector3(0, 0, 90 + (((i - 2) * 252) + 252 / 2)));
+                    backFill[fillerIndex] = Object.Instantiate(filler[fillerIndex], filler[fillerIndex].transform.position * -1f, filler[fillerIndex].transform.rotation);
+                    backFill[fillerIndex].transform.Rotate(new Vector3(0, 180, 180));
+                    tileList.Add(filler[fillerIndex]);
+                    tileList.Add(backFill[fillerIndex]);
+                    fillerIndex++;
+                }
+            }
+            */
+            /*
+            for (int test = 0; test < 2; test++)
+            {
+                if (fillerIndex < 2)
+                    break;
+                GameObject lastHex = filler[fillerIndex - 1];
+                Vector3 hexAxis = lastHex.transform.position;
+                GameObject newHex = Object.Instantiate(hexagon, lastHex.transform.position, lastHex.transform.rotation);
+                newHex.transform.RotateAround(Vector3.zero, pentEdges[i].axis, bigJump * test / -2f);
+                newHex.transform.RotateAround(Vector3.zero, hexAxis, smallJump * test);
+            }
+            */
         }
-        fillerInit = fillerIndex;
+            fillerInit = fillerIndex;
 
         //copy paths for other pentagons
         for (int i = 1; i < 6; i++)
@@ -244,12 +291,15 @@ public class Polyhedron : MonoBehaviour
         float tempAngle = angle * -1f;
         //Debug.Log(tempAngle);
         float partialDist = ((size - 1) * 2 * hexInradius) + (2 * pentInradius);
+        float partialDist2 = ((size - 1) * 2 * hexRadius) + (size * sideLength) + (2 * pentRadius);
         //Debug.Log(partialDist);
         float circ = ((360 / tempAngle) * partialDist);
         radius = circ / (2 * Mathf.PI);
 
         smallJump = ((pentInradius + hexInradius) / partialDist) * angle;
         bigJump = ((2 * hexInradius) / partialDist) * angle;
+        smallJump2 = ((pentRadius + sideLength + hexRadius) / partialDist2) * angle2;
+        bigJump2 = (((2 * hexRadius) + sideLength) / partialDist2) * angle2;
     }
     
 }

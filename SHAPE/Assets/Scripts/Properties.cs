@@ -165,14 +165,14 @@ public class Properties : MonoBehaviour {
         //scale function based around scale 2 = sea level
         scale.z = ((newAlt + 8025) / 4000) * 1.2f * globe.GetComponent<Polyhedron>().radius/10 - (2f * globe.GetComponent<Polyhedron>().radius/10);
         if (GetComponent<PentaPrism>())
-            GetComponent<PentaPrism>().changeDim();
+            GetComponent<PentaPrism>().changeDim(globe.GetComponent<Polyhedron>().radius, scale.z);
         else if (GetComponent<HexPrism>())
         {
             GetComponent<HexPrism>().changeDim(globe.GetComponent<Polyhedron>().radius, scale.z);
             scale.z *= 0.8506508f;
             scale.x = scale.y = 1.17557f;
         }
-        scale *= 0.95f;
+        //scale *= 0.95f;
         gameObject.transform.localScale = scale;
     }
 

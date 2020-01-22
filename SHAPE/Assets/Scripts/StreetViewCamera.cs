@@ -33,7 +33,7 @@ public class StreetViewCamera : MonoBehaviour {
             //transform.rotation = Quaternion.Euler(X, Y, 0);
         }
         //cameraRadius = planet.GetComponent<Polyhedron>().radius + (float)(Math.Sqrt(planet.GetComponent<Polyhedron>().radius)) + 5f;
-        cameraRadius += Input.GetAxis("Vertical");
+        cameraRadius += Input.GetAxis("Vertical") + Input.GetAxis("Mouse ScrollWheel") * 8;
         gameObject.transform.localPosition = new Vector3(0, 0, cameraRadius);
         if (cameraRadius > minimum)
             cameraRadius = minimum;

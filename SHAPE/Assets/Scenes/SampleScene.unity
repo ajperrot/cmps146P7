@@ -333,7 +333,7 @@ MonoBehaviour:
   tiles: []
   testNum: 0
   radius: 0
-  size: 20
+  size: 11
   radMod: 1
   pentagon: {fileID: 0}
   hexagon: {fileID: 0}
